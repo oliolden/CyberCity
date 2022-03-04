@@ -26,6 +26,15 @@ namespace CyberCity {
             };
             _currentScene = _scenes["game"];
 
+            _scenes["game"].gameObjects.Add(new World(this));
+            ((World)_scenes["game"].gameObjects[0]).tiles = new List<List<Tile>> {
+                new List<Tile>{ new Tile(1), new Tile(1), new Tile(1), new Tile(1), },
+                new List<Tile>{ new Tile(1), new Tile(0), new Tile(0), new Tile(1), },
+                new List<Tile>{ new Tile(1), new Tile(0), new Tile(0), new Tile(1), },
+                new List<Tile>{ new Tile(1), new Tile(1), new Tile(1), new Tile(1), },
+            };
+            ((World)_scenes["game"].gameObjects[0]).UpdateTileTextures();
+
             _scenes["game"].gameObjects.Add(new Player(this));
 
             base.Initialize();

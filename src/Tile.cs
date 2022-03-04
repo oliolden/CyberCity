@@ -6,19 +6,21 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace CyberCity {
     internal class Tile {
-        public static int tileWidth = 32, tileHeight = 32;
+        public static int width = 32, height = 32;
 
-        private World world;
+        public static string[] types = new string[] {
+            null, "IndustrialTile01"
+        };
+
         public string type;
         public Texture2D texture;
 
-        public Tile(World _world, string _type) {
-            world = _world;
+        public Tile(string _type) {
             type = _type;
         }
 
-        public void UpdateTexture() {
-
+        public Tile(int id) {
+            type = types[id];
         }
     }
 }

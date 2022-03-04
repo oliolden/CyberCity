@@ -193,6 +193,18 @@
 /processorParam:TextureFormat=Color
 /build:World/IndustrialTile01/BottomLeft.png
 
+#begin World/IndustrialTile01/BottomLeftRight.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:World/IndustrialTile01/BottomLeftRight.png
+
 #begin World/IndustrialTile01/BottomRight.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -228,6 +240,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:World/IndustrialTile01/Left.png
+
+#begin World/IndustrialTile01/LeftRight.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:World/IndustrialTile01/LeftRight.png
 
 #begin World/IndustrialTile01/Right.png
 /importer:TextureImporter
@@ -265,6 +289,42 @@
 /processorParam:TextureFormat=Color
 /build:World/IndustrialTile01/Top.png
 
+#begin World/IndustrialTile01/TopBottom.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:World/IndustrialTile01/TopBottom.png
+
+#begin World/IndustrialTile01/TopBottomLeft.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:World/IndustrialTile01/TopBottomLeft.png
+
+#begin World/IndustrialTile01/TopBottomRight.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:World/IndustrialTile01/TopBottomRight.png
+
 #begin World/IndustrialTile01/TopLeft.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -276,6 +336,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:World/IndustrialTile01/TopLeft.png
+
+#begin World/IndustrialTile01/TopLeftRight.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:World/IndustrialTile01/TopLeftRight.png
 
 #begin World/IndustrialTile01/TopRight.png
 /importer:TextureImporter
