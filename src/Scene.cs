@@ -6,10 +6,10 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace CyberCity {
     internal class Scene {
-        private Game1 _game;
+        protected Game1 game;
         public List<GameObject> gameObjects;
         public Scene(Game1 myGame) {
-            _game = myGame;
+            game = myGame;
             gameObjects = new List<GameObject>();
         }
 

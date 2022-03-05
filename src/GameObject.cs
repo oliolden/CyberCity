@@ -15,7 +15,8 @@ namespace CyberCity {
         public SpriteEffects spriteEffects;
         public bool enabled;
 
-        public GameObject() {
+        public GameObject(Game1 myGame) {
+            game = myGame;
             position = Vector2.Zero;
             rotation = 0f;
             scale = Vector2.One;

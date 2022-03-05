@@ -3,6 +3,8 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Diagnostics;
 
 namespace CyberCity {
     public class Game1 : Game {
@@ -10,6 +12,7 @@ namespace CyberCity {
         private SpriteBatch _spriteBatch;
         private Dictionary<string, Scene> _scenes;
         private Scene _currentScene;
+        internal Dictionary<string, Texture2D> textures;
 
         public Game1() {
             _graphics = new GraphicsDeviceManager(this);
@@ -19,31 +22,46 @@ namespace CyberCity {
 
 
         protected override void Initialize() {
+            base.Initialize();
             // TODO: Add your initialization logic here
             _scenes = new Dictionary<string, Scene> {
                 { "mainMenu", new Scene(this) },
-                { "game", new Scene(this) },
+                { "game", new GameScene(this) },
             };
             _currentScene = _scenes["game"];
-
-            _scenes["game"].gameObjects.Add(new World(this));
-            ((World)_scenes["game"].gameObjects[0]).tiles = new List<List<Tile>> {
-                new List<Tile>{ new Tile(1), new Tile(1), new Tile(1), new Tile(1), },
-                new List<Tile>{ new Tile(1), new Tile(0), new Tile(0), new Tile(1), },
-                new List<Tile>{ new Tile(1), new Tile(0), new Tile(0), new Tile(1), },
-                new List<Tile>{ new Tile(1), new Tile(1), new Tile(1), new Tile(1), },
-            };
-            ((World)_scenes["game"].gameObjects[0]).UpdateTileTextures();
-
-            _scenes["game"].gameObjects.Add(new Player(this));
-
-            base.Initialize();
         }
 
         protected override void LoadContent() {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
+            textures = new Dictionary<string, Texture2D>();
+            foreach (string file in Directory.GetFiles("..\\..\\..\\Content\\")) {
+                if (file.EndsWith(".png")) {
+                    string textureName = file.Substring(0, file.Length - 4);
+                    textureName = textureName.Substring(17);
+                    textures.Add(textureName, Content.Load<Texture2D>(textureName));
+                }
+            }
+            foreach (string path in Directory.GetDirectories("..\\..\\..\\Content\\")) {
+                string directory = path.Substring(17);
+                if (directory != "bin" && directory != "obj") {
+                    LoadContentAtPath(path);
+                }
+            }
+        }
+
+        private void LoadContentAtPath(string path) {
+            foreach (string file in Directory.GetFiles(path)) {
+                if (file.EndsWith(".png")) {
+                    string textureName = file.Substring(0, file.Length - 4);
+                    textureName = textureName.Substring(17);
+                    textures.Add(textureName, Content.Load<Texture2D>(textureName));
+                }
+            }
+            foreach (string directory in Directory.GetDirectories(path)) {
+                LoadContentAtPath(directory);
+            }
         }
 
         protected override void Update(GameTime gameTime) {

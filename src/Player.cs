@@ -14,13 +14,11 @@ namespace CyberCity {
         private float topSpeed;
         private float acceleration;
 
-        public Player(Game1 myGame) {
-            game = myGame;
-
+        public Player(Game1 myGame) : base(myGame){
             _animations = new Dictionary<string, Animation> {
-                { "idle", new Animation(game.Content.Load<Texture2D>("Cyborg/Cyborg_idle"), 4, true) },
-                { "run", new Animation(game.Content.Load<Texture2D>("Cyborg/Cyborg_run"), 6, true) },
-                { "jump", new Animation(game.Content.Load<Texture2D>("Cyborg/Cyborg_run"), 4, false) },
+                { "idle", new Animation(game.textures["Cyborg\\Cyborg_idle"], 4, true) },
+                { "run", new Animation(game.textures["Cyborg\\Cyborg_run"], 6, true) },
+                { "jump", new Animation(game.textures["Cyborg\\Cyborg_run"], 4, false) },
             };
             _animationManager = new AnimationManager(_animations["idle"]);
 
