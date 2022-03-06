@@ -35,7 +35,8 @@ namespace CyberCity {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
-            textures = new Dictionary<string, Texture2D>();
+            textures = new Dictionary<string, Texture2D> { { "Blank", new Texture2D(GraphicsDevice, 1, 1) } };
+            textures["Blank"].SetData(new Color[] { Color.White });
             foreach (string file in Directory.GetFiles("..\\..\\..\\Content\\")) {
                 if (file.EndsWith(".png")) {
                     string textureName = file.Substring(0, file.Length - 4);
@@ -72,7 +73,7 @@ namespace CyberCity {
         }
 
         protected override void Draw(GameTime gameTime) {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(_currentScene.backgroundColor);
 
             // TODO: Add your drawing code here
             _spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp);

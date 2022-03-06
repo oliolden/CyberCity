@@ -6,8 +6,9 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace CyberCity {
     internal class Scene {
-        protected Game1 game;
+        internal Game1 game;
         public List<GameObject> gameObjects;
+        public Color backgroundColor;
         public Scene(Game1 myGame) {
             game = myGame;
             gameObjects = new List<GameObject>();

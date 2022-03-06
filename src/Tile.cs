@@ -14,13 +14,16 @@ namespace CyberCity {
 
         public string type;
         public Texture2D texture;
+        public Color color;
 
         public Tile(string _type) {
             type = _type;
+            color = Color.White;
         }
 
         public Tile(int id) {
             type = types[id];
+            color = Color.White;
         }
 
         public static Tile[,] GetTiles(int[,] idArray) {

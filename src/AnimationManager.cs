@@ -24,7 +24,10 @@ namespace CyberCity {
         public void Update(GameTime gameTime) {
             _timer += gameTime.ElapsedGameTime.TotalSeconds;
             if (_timer > animation.frameTime) {
-                animation.currentFrame++; if (animation.isLoop && animation.currentFrame >= animation.frameCount) { animation.currentFrame = 0; }
+                animation.currentFrame++; if (animation.currentFrame >= animation.frameCount) {
+                    if (animation.isLoop) { animation.currentFrame = 0; }
+                    else { animation.currentFrame = animation.frameCount - 1; } 
+                }
                 _timer = 0;
             }
         }

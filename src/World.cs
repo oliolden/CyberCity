@@ -9,7 +9,7 @@ namespace CyberCity {
         //public List<List<Tile>> tiles;
         public Tile[,] tiles;
 
-        public World(Game1 myGame) : base(myGame) { }
+        public World(Scene myScene) : base(myScene) { }
 
         public void UpdateTileTextures() {
             int width = tiles.GetLength(0);
@@ -52,16 +52,38 @@ namespace CyberCity {
                 }
             }
         }
+
+        public void UpdateHitBox() {
+            int width = tiles.GetLength(0);
+            int height = tiles.GetLength(1);
+            hitBox = new Rectangle[tiles.Length];
+            for (int x = 0; x < width; x++) {
+                for (int y = 0; y < height; y++) {
+                    if (tiles[x, y].type != null) {
+                        hitBox[y * width + x] = new Rectangle((x - 1) * Tile.width, (y - 1) * Tile.height, Tile.width, Tile.height);
+                        if (hitBox[y * width + x].Intersects(scene.gameObjects[1].hitBox[0])) { tiles[x, y].color = Color.Red; }
+                        else { tiles[x, y].color = Color.White; }
+                    }
+                }
+            }
+        }
+
+        public override void Update(GameTime gameTime) {
+            UpdateHitBox();
+        }
+
         public override void Draw(SpriteBatch batch, GameTime gameTime) {
             int width = tiles.GetLength(0);
             int height = tiles.GetLength(1);
             for (int x = 0; x < width; x++) {
                 for (int y = 0; y < height; y++) {
-                    if (tiles[x, y].texture != null)
-                        batch.Draw(tiles[x, y].texture, new Vector2((float)(x - 1) * Tile.width, (float)(y - 1) * Tile.height), Color.White);
+                    Tile tile = tiles[x, y];
+                    if (tile.texture != null)
+                        batch.Draw(tile.texture, new Vector2((float)(x - 1) * Tile.width, (float)(y - 1) * Tile.height), tile.color);
                 }
             }
         }
+
 
         /*
         public void UpdateTileTextures() {

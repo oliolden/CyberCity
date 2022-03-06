@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 namespace CyberCity {
     internal abstract class GameObject {
         protected Game1 game;
+        protected Scene scene;
         public Vector2 position;
         public float rotation;
         public Vector2 scale;
@@ -14,9 +15,12 @@ namespace CyberCity {
         public Color color;
         public SpriteEffects spriteEffects;
         public bool enabled;
+        public Rectangle[] hitBox;
+        public bool collideable;
 
-        public GameObject(Game1 myGame) {
-            game = myGame;
+        public GameObject(Scene myScene) {
+            scene = myScene;
+            game = scene.game;
             position = Vector2.Zero;
             rotation = 0f;
             scale = Vector2.One;
@@ -24,6 +28,26 @@ namespace CyberCity {
             color = Color.White;
             spriteEffects = SpriteEffects.None;
             enabled = true;
+            collideable = false;
+        }
+
+        public bool Collides(GameObject target) {
+            if (target == null || !target.enabled || !enabled) return false;
+            foreach (Rectangle myRect in hitBox) {
+                foreach (Rectangle targetRect in target.hitBox) {
+                    if(myRect.Intersects(targetRect)) return true;
+                }
+            }
+            return false;
+        }
+
+        public bool CollidesAny() {
+            foreach (GameObject gameObject in scene.gameObjects) {
+                if (gameObject != this && Collides(gameObject)) {
+                    return true;
+                }
+            }
+            return false;
         }
 
         public virtual void Update(GameTime gameTime) { }
