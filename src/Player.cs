@@ -14,6 +14,8 @@ namespace CyberCity {
         private float topSpeed;
         private float sprintBoost;
         private float acceleration;
+
+        // Bools
         private bool isGrounded;
         private bool isRunning;
         private bool isAttacking;
@@ -21,6 +23,7 @@ namespace CyberCity {
         private bool canJump;
         private bool isBlocked;
         private bool isSprinting;
+        private bool runAttack;
 
         private Point hitBoxSize;
 
@@ -31,7 +34,7 @@ namespace CyberCity {
                 { "jump", new Animation(game.textures["Cyborg\\Cyborg_jump"], 4, false) },
                 { "doublejump", new Animation(game.textures["Cyborg\\Cyborg_doublejump"], 5, false, 0.1f) },
                 { "run_attack", new Animation(game.textures["Cyborg\\Cyborg_run_attack"], 6, false) },
-                { "punch", new Animation(game.textures["Cyborg\\Cyborg_punch"], 6, false) },
+                { "punch", new Animation(game.textures["Cyborg\\Cyborg_punch"], 6, false, 0.1f) },
             };
             _animationManager = new AnimationManager(_animations["idle"]);
 
@@ -45,6 +48,7 @@ namespace CyberCity {
             isGrounded = false;
             isRunning = false;
             isAttacking = false;
+            runAttack = false;
             UpdateHitBox();
         }
 
@@ -114,16 +118,21 @@ namespace CyberCity {
             }
 
             // Attacking
-            if (mouse.LeftButton == ButtonState.Pressed) {
+            if (!isAttacking && isGrounded && mouse.LeftButton == ButtonState.Pressed) {
                 isAttacking = true;
+                runAttack = isRunning;
             }
+            else if (isAttacking && _animationManager.animation.currentFrame < 5) { }
             else { isAttacking = false; }
 
             // Animations
             if(!isGrounded) { if (hasDoubleJumped) playAnimation("doublejump"); else playAnimation("jump"); }
-            else if (isRunning) { if (isAttacking) playAnimation("run_attack"); else playAnimation("run"); _animationManager.animation.frameTime = Math.Abs(8f / velocity.X); }
-            else if (isAttacking) { playAnimation("punch"); }
+            else if (isAttacking) { if (runAttack) playAnimation("run_attack"); else playAnimation("punch"); }
+            else if (isRunning) playAnimation("run");
             else { playAnimation("idle"); }
+
+            if (isRunning) _animationManager.animation.frameTime = Math.Abs(8f / velocity.X);
+            else if (runAttack) _animationManager.animation.frameTime = 0.1f;
 
             _animationManager.Update(gameTime);
         }
