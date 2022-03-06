@@ -7,22 +7,25 @@ using Microsoft.Xna.Framework.Graphics;
 namespace CyberCity {
     internal class Scene {
         internal Game1 game;
-        public List<GameObject> gameObjects;
+        public Dictionary<string, GameObject> objects;
         public Color backgroundColor;
+        public Camera camera;
         public Scene(Game1 myGame) {
             game = myGame;
-            gameObjects = new List<GameObject>();
+            objects = new Dictionary<string, GameObject>();
+            camera = new Camera(game);
         }
 
-        public void Update(GameTime gameTime) {
-            foreach (GameObject obj in gameObjects) {
+        public virtual void Update(GameTime gameTime) {
+            foreach (GameObject obj in objects.Values) {
                 if (obj.enabled)
                     obj.Update(gameTime);
             }
+            camera.Update();
         }
 
         public void Draw(SpriteBatch batch, GameTime gameTime) {
-            foreach (GameObject obj in gameObjects) {
+            foreach (GameObject obj in objects.Values) {
                 if (obj.enabled)
                     obj.Draw(batch, gameTime);
             }

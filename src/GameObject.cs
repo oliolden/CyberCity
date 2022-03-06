@@ -42,7 +42,7 @@ namespace CyberCity {
         }
 
         public bool CollidesAny() {
-            foreach (GameObject gameObject in scene.gameObjects) {
+            foreach (GameObject gameObject in scene.objects.Values) {
                 if (gameObject != this && Collides(gameObject)) {
                     return true;
                 }

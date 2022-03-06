@@ -9,7 +9,7 @@ using System.Diagnostics;
 namespace CyberCity {
     public class Game1 : Game {
         private GraphicsDeviceManager _graphics;
-        private SpriteBatch _spriteBatch;
+        internal SpriteBatch _spriteBatch;
         private Dictionary<string, Scene> _scenes;
         private Scene _currentScene;
         internal Dictionary<string, Texture2D> textures;
@@ -22,8 +22,10 @@ namespace CyberCity {
 
 
         protected override void Initialize() {
+            Window.AllowUserResizing = true;
             base.Initialize();
             // TODO: Add your initialization logic here
+
             _scenes = new Dictionary<string, Scene> {
                 { "mainMenu", new Scene(this) },
                 { "game", new GameScene(this) },
@@ -76,7 +78,7 @@ namespace CyberCity {
             GraphicsDevice.Clear(_currentScene.backgroundColor);
 
             // TODO: Add your drawing code here
-            _spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp);
+            _spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, null, null, null, _currentScene.camera.matrix);
             _currentScene.Draw(_spriteBatch, gameTime);
             _spriteBatch.End();
 

@@ -131,8 +131,8 @@ namespace CyberCity {
             else if (isRunning) playAnimation("run");
             else { playAnimation("idle"); }
 
-            if (isRunning) _animationManager.animation.frameTime = Math.Abs(8f / velocity.X);
-            else if (runAttack) _animationManager.animation.frameTime = 0.1f;
+            if (isGrounded && isRunning) _animationManager.animation.frameTime = Math.Abs(8f / velocity.X);
+            else if (isGrounded && isAttacking && runAttack) _animationManager.animation.frameTime = 0.1f;
 
             _animationManager.Update(gameTime);
         }
