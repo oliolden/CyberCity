@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework.Graphics;
 namespace CyberCity {
     internal class World : GameObject {
         public Tile[,] tiles;
+        public Texture2D[] backgrounds;
 
         public World(Scene myScene) : base(myScene) { }
 
@@ -76,6 +77,15 @@ namespace CyberCity {
         }
 
         public override void Draw(SpriteBatch batch, GameTime gameTime) {
+            // Draw backgrounds
+            int i = 2;
+            foreach (Texture2D background in backgrounds) {
+                Vector3 pos = -scene.camera.matrix.Translation / i;
+                batch.Draw(background, new Rectangle((int)pos.X, (int)pos.Y, 576, 324), Color.White);
+                i++;
+            }
+
+            // Draw tiles
             int width = tiles.GetLength(0);
             int height = tiles.GetLength(1);
             for (int x = 0; x < width; x++) {
