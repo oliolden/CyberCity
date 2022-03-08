@@ -28,7 +28,7 @@ namespace CyberCity {
             color = Color.White;
             spriteEffects = SpriteEffects.None;
             enabled = true;
-            collideable = false;
+            collideable = true;
         }
 
         public bool Collides(GameObject target) {
@@ -43,7 +43,7 @@ namespace CyberCity {
 
         public bool CollidesAny() {
             foreach (GameObject gameObject in scene.objects.Values) {
-                if (gameObject != this && Collides(gameObject)) {
+                if (gameObject != this && gameObject.collideable && Collides(gameObject)) {
                     return true;
                 }
             }

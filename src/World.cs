@@ -78,11 +78,18 @@ namespace CyberCity {
 
         public override void Draw(SpriteBatch batch, GameTime gameTime) {
             // Draw backgrounds
-            int i = 2;
+            float dist = 20;
             foreach (Texture2D background in backgrounds) {
-                Vector3 pos = -scene.camera.matrix.Translation / i;
-                batch.Draw(background, new Rectangle((int)pos.X, (int)pos.Y, 576, 324), Color.White);
-                i++;
+                Vector2 center = -scene.camera.center / dist;
+                Point size = new Point((int)(background.Width * 2), (int)(background.Height * 2));
+                Matrix matrix = Matrix.CreateTranslation(center.X, center.Y, 0);// * Matrix.CreateTranslation(-scene.camera.viewport.Width / 2, scene.camera.viewport.Height / 2, 0);
+                Vector3 pos = matrix.Translation;
+
+                for (int i = -1; i < 2; i++) {
+                    //batch.Draw(background, new Rectangle((int)(pos.X + i * size.X), (int)pos.Y, size.X, size.Y), Color.White);
+                    batch.Draw(background, new Vector2(pos.X + i * size.X, pos.Y), null, Color.White, 0f, Vector2.Zero, 2, SpriteEffects.None, 0f);
+                }
+                dist = dist / 1.2f;
             }
 
             // Draw tiles

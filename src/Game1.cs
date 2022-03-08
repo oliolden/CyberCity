@@ -9,7 +9,7 @@ using System.Diagnostics;
 namespace CyberCity {
     public class Game1 : Game {
         private GraphicsDeviceManager _graphics;
-        internal SpriteBatch _spriteBatch;
+        private SpriteBatch _spriteBatch;
         private Dictionary<string, Scene> _scenes;
         private Scene _currentScene;
         internal Dictionary<string, Texture2D> textures;
