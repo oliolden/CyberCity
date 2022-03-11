@@ -15,7 +15,7 @@ namespace CyberCity {
         public Color color;
         public SpriteEffects spriteEffects;
         public bool enabled;
-        public Rectangle[] hitBox;
+        public List<Rectangle> hitBox;
         public bool collideable;
 
         public GameObject(Scene myScene) {

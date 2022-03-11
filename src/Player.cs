@@ -24,8 +24,12 @@ namespace CyberCity {
         private bool isBlocked;
         private bool isSprinting;
         private bool runAttack;
+        private bool noClip;
 
         private Point hitBoxSize;
+
+        KeyboardState keyboardState;
+        MouseState mouseState;
 
         public Player(Scene myScene) : base(myScene) {
             _animations = new Dictionary<string, Animation> {
@@ -49,24 +53,54 @@ namespace CyberCity {
             isRunning = false;
             isAttacking = false;
             runAttack = false;
+            noClip = true;
             UpdateHitBox();
         }
 
         public override void Update(GameTime gameTime) {
-            KeyboardState keyboard = Keyboard.GetState();
-            MouseState mouse = Mouse.GetState();
+            KeyboardState prevKeyboardState = keyboardState;
+            MouseState prevMouseState = mouseState;
+            keyboardState = Keyboard.GetState();
+            mouseState = Mouse.GetState();
+
+            if (keyboardState.IsKeyDown(Keys.V) && prevKeyboardState.IsKeyUp(Keys.V)) {
+                noClip = !noClip;
+            }
+
+            if (noClip) {
+                float noClipSpeed = 1000;
+                color = new Color(255, 255, 255, 200);
+                velocity = Vector2.Zero;
+                if (keyboardState.IsKeyDown(Keys.W)) {
+                    velocity.Y -= noClipSpeed;
+                }
+                if (keyboardState.IsKeyDown(Keys.A)) {
+                    velocity.X -= noClipSpeed;
+                }
+                if (keyboardState.IsKeyDown(Keys.S)) {
+                    velocity.Y += noClipSpeed;
+                }
+                if (keyboardState.IsKeyDown(Keys.D)) {
+                    velocity.X += noClipSpeed;
+                }
+                position += velocity * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                return;
+            }
+            else {
+                color = Color.White;
+            }
 
             // Movement
             isRunning = false;
             if (isGrounded) hasDoubleJumped = false;
-            if (keyboard.IsKeyDown(Keys.LeftShift)) isSprinting = true; else isSprinting = false;
+            if (keyboardState.IsKeyDown(Keys.LeftShift)) isSprinting = true; else isSprinting = false;
 
-            if (keyboard.IsKeyDown(Keys.D) || keyboard.IsKeyDown(Keys.A)) {
-                if (keyboard.IsKeyDown(Keys.D)) {
+            if (keyboardState.IsKeyDown(Keys.D) || keyboardState.IsKeyDown(Keys.A)) {
+                if (keyboardState.IsKeyDown(Keys.D)) {
                     spriteEffects = SpriteEffects.None;
                     velocity.X += acceleration * (float)gameTime.ElapsedGameTime.TotalSeconds; if (velocity.X > topSpeed + (isSprinting ? sprintBoost : 0)) { velocity.X = topSpeed + (isSprinting ? sprintBoost : 0); }
                 }
-                if (keyboard.IsKeyDown(Keys.A)) {
+                if (keyboardState.IsKeyDown(Keys.A)) {
                     spriteEffects = SpriteEffects.FlipHorizontally;
                     velocity.X -= acceleration * (float)gameTime.ElapsedGameTime.TotalSeconds; if (velocity.X < -topSpeed - (isSprinting ? sprintBoost : 0)) { velocity.X = -topSpeed - (isSprinting ? sprintBoost : 0); }
                 }
@@ -79,7 +113,7 @@ namespace CyberCity {
             }
 
             if (isGrounded || !hasDoubleJumped) {
-                if (keyboard.IsKeyDown(Keys.Space)) {
+                if (keyboardState.IsKeyDown(Keys.Space)) {
                     if (canJump) {
                         velocity.Y = -500f;
                         if (!isGrounded) hasDoubleJumped = true;
@@ -96,9 +130,11 @@ namespace CyberCity {
             isBlocked = false;
             if (CollidesAny()) {
                 if (Math.Abs(velocity.X) > 0) { isBlocked = true; }
-                while (CollidesAny()) {
+                int i = 0;
+                while (CollidesAny() && i < 1000) {
                     position.X -= 0.01f * velocity.X / Math.Abs(velocity.X);
                     UpdateHitBox();
+                    i++;
                 }
                 velocity.X = 0;
                 UpdateHitBox();
@@ -110,15 +146,17 @@ namespace CyberCity {
             isGrounded = false;
             if (CollidesAny()) {
                 if (velocity.Y > 0) { isGrounded = true; }
-                while (CollidesAny()) {
+                int i = 0;
+                while (CollidesAny() && i < 1000) {
                     position.Y -= 0.01f * velocity.Y / Math.Abs(velocity.Y);
                     UpdateHitBox();
+                    i++;
                 }
                 velocity.Y = 0;
             }
 
             // Attacking
-            if (!isAttacking && isGrounded && mouse.LeftButton == ButtonState.Pressed) {
+            if (!isAttacking && isGrounded && mouseState.LeftButton == ButtonState.Pressed) {
                 isAttacking = true;
                 runAttack = isRunning;
             }
@@ -142,11 +180,14 @@ namespace CyberCity {
         }
 
         private void UpdateHitBox() {
-            hitBox = new Rectangle[] { new Rectangle((int)(position.X - origin.X), (int)(position.Y - origin.Y + 12), hitBoxSize.X, hitBoxSize.Y) };
+            hitBox = new List<Rectangle> { new Rectangle((int)(position.X - origin.X), (int)(position.Y - origin.Y + 12), hitBoxSize.X, hitBoxSize.Y) };
         }
 
         public override void Draw(SpriteBatch batch, GameTime gameTime) {
             _animationManager.Draw(batch, position - Vector2.UnitX * (spriteEffects == SpriteEffects.FlipHorizontally ? 24 : 0), color, rotation, origin, scale, spriteEffects);
+            batch.DrawString(game.fonts["Fonts\\Arial"], $"X: {position.X}\nY: {position.Y}", scene.camera.position, Color.Lime, 0f, Vector2.Zero, 1 / scene.camera.zoom, SpriteEffects.None, 0f);
+            Rectangle viewArea = new Rectangle((int)scene.camera.center.X - scene.camera.viewport.Width / 2, (int)scene.camera.center.Y - scene.camera.viewport.Height / 2, scene.camera.viewport.Width, scene.camera.viewport.Height);
+            batch.Draw(game.textures["Blank"], viewArea, null, new Color(0, 255, 0, 20));
         }
     }
 }

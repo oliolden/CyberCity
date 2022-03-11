@@ -13,6 +13,7 @@ namespace CyberCity {
         private Dictionary<string, Scene> _scenes;
         private Scene _currentScene;
         internal Dictionary<string, Texture2D> textures;
+        internal Dictionary<string, SpriteFont> fonts;
 
         public Game1() {
             _graphics = new GraphicsDeviceManager(this);
@@ -38,14 +39,9 @@ namespace CyberCity {
 
             // TODO: use this.Content to load your game content here
             textures = new Dictionary<string, Texture2D> { { "Blank", new Texture2D(GraphicsDevice, 1, 1) } };
+            fonts = new Dictionary<string, SpriteFont>();
             textures["Blank"].SetData(new Color[] { Color.White });
-            foreach (string file in Directory.GetFiles("..\\..\\..\\Content\\")) {
-                if (file.EndsWith(".png")) {
-                    string textureName = file.Substring(0, file.Length - 4);
-                    textureName = textureName.Substring(17);
-                    textures.Add(textureName, Content.Load<Texture2D>(textureName));
-                }
-            }
+            LoadFilesAtPath("..\\..\\..\\Content\\");
             foreach (string path in Directory.GetDirectories("..\\..\\..\\Content\\")) {
                 string directory = path.Substring(17);
                 if (directory != "bin" && directory != "obj") {
@@ -55,15 +51,24 @@ namespace CyberCity {
         }
 
         private void LoadContentAtPath(string path) {
+            LoadFilesAtPath(path);
+            foreach (string directory in Directory.GetDirectories(path)) {
+                LoadContentAtPath(directory);
+            }
+        }
+
+        private void LoadFilesAtPath(string path) {
             foreach (string file in Directory.GetFiles(path)) {
                 if (file.EndsWith(".png")) {
                     string textureName = file.Substring(0, file.Length - 4);
                     textureName = textureName.Substring(17);
                     textures.Add(textureName, Content.Load<Texture2D>(textureName));
                 }
-            }
-            foreach (string directory in Directory.GetDirectories(path)) {
-                LoadContentAtPath(directory);
+                if (file.EndsWith(".spritefont")) {
+                    string fontName = file.Substring(0, file.Length - 11);
+                    fontName = fontName.Substring(17);
+                    fonts.Add(fontName, Content.Load<SpriteFont>(fontName));
+                }
             }
         }
 
