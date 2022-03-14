@@ -185,9 +185,7 @@ namespace CyberCity {
 
         public override void Draw(SpriteBatch batch, GameTime gameTime) {
             _animationManager.Draw(batch, position - Vector2.UnitX * (spriteEffects == SpriteEffects.FlipHorizontally ? 24 : 0), color, rotation, origin, scale, spriteEffects);
-            batch.DrawString(game.fonts["Fonts\\Arial"], $"X: {position.X}\nY: {position.Y}", scene.camera.position, Color.Lime, 0f, Vector2.Zero, 1 / scene.camera.zoom, SpriteEffects.None, 0f);
-            Rectangle viewArea = new Rectangle((int)scene.camera.center.X - scene.camera.viewport.Width / 2, (int)scene.camera.center.Y - scene.camera.viewport.Height / 2, scene.camera.viewport.Width, scene.camera.viewport.Height);
-            batch.Draw(game.textures["Blank"], viewArea, null, new Color(0, 255, 0, 20));
+            batch.DrawString(game.fonts["Fonts\\Arial"], $"XY: {string.Format("{0:#0.00}", position.X)}, {string.Format("{0:#0.00}", position.Y)}", scene.camera.position, Color.Lime, 0f, Vector2.Zero, 1 / scene.camera.zoom, SpriteEffects.None, 0f);
         }
     }
 }
