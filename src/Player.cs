@@ -53,7 +53,7 @@ namespace CyberCity {
             isRunning = false;
             isAttacking = false;
             runAttack = false;
-            noClip = true;
+            noClip = false;
             UpdateHitBox();
         }
 
@@ -69,7 +69,7 @@ namespace CyberCity {
 
             if (noClip) {
                 float noClipSpeed = 1000;
-                color = new Color(255, 255, 255, 200);
+                color = new Color(100, 100, 100, 100);
                 velocity = Vector2.Zero;
                 if (keyboardState.IsKeyDown(Keys.W)) {
                     velocity.Y -= noClipSpeed;

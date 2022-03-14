@@ -23,7 +23,7 @@ namespace CyberCity {
                 Tile[,] chunk = new Tile[16, 16];
                 for (int x = 0; x < 16; x++) {
                     for (int y = 0; y < 16; y++) {
-                        if (y >= 14) { chunk[x, y] = new Tile(1); }
+                        if (y >= 12) { chunk[x, y] = new Tile(1); }
                         else chunk[x, y] = new Tile(0);
                     }
                 }
@@ -117,7 +117,7 @@ namespace CyberCity {
 
         public override void Draw(SpriteBatch batch, GameTime gameTime) {
             // Draw backgrounds
-            float scale = 1.5f;
+            float scale = 1.4f;
             float parallaxStrength = 1;
             foreach (Texture2D background in backgrounds) {
                 float width = background.Width * scale;

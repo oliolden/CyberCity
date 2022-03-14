@@ -21,8 +21,7 @@ namespace CyberCity {
         public override void Update(GameTime gameTime) {
 
             camera.zoom += ((camera.viewport.Height/240 * (float)Math.Pow(0.9, ((Player)objects["Player"]).velocity.Length()/100)) - camera.zoom) * (float)gameTime.ElapsedGameTime.TotalSeconds;
-            //camera.zoom = camera.viewport.Height / (480f * 4f);
-            Vector2 camDist = (objects["Player"].position + (Vector2.UnitY * -48) - camera.center);
+            Vector2 camDist = (objects["Player"].position + (Vector2.UnitY * -80) - camera.center);
             camera.center += camDist * 5 * (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             base.Update(gameTime);
