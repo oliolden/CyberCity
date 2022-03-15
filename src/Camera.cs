@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace CyberCity {
     internal class Camera {
-        Game1 game;
+        private Game1 game;
         public Vector2 center;
         public Vector2 position { get { return new Vector2(-matrix.Translation.X, -matrix.Translation.Y) / zoom; } set { } }
         public float rotation;

@@ -20,7 +20,6 @@ namespace CyberCity {
         private bool isRunning;
         private bool isAttacking;
         private bool hasDoubleJumped;
-        private bool canJump;
         private bool isBlocked;
         private bool isSprinting;
         private bool runAttack;
@@ -28,8 +27,8 @@ namespace CyberCity {
 
         private Point hitBoxSize;
 
-        KeyboardState keyboardState;
-        MouseState mouseState;
+        private KeyboardState keyboardState;
+        private MouseState mouseState;
 
         public Player(Scene myScene) : base(myScene) {
             _animations = new Dictionary<string, Animation> {
@@ -114,13 +113,11 @@ namespace CyberCity {
 
             if (isGrounded || !hasDoubleJumped) {
                 if (keyboardState.IsKeyDown(Keys.Space)) {
-                    if (canJump) {
+                    if (prevKeyboardState.IsKeyUp(Keys.Space)) {
                         velocity.Y = -500f;
                         if (!isGrounded) hasDoubleJumped = true;
                     }
-                    canJump = false;
                 }
-                else { canJump = true; }
             }
             velocity.Y += 20.0f;
 
