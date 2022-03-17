@@ -115,7 +115,7 @@ namespace CyberCity {
                     }
                 }
                 else {
-                    velocity.X = velocity.X * (float)Math.Pow(0.001f, gameTime.ElapsedGameTime.TotalSeconds);
+                    velocity.X = velocity.X * (float)Math.Pow(TileType.types[((World)scene.objects["World"]).GetTile(position.X, position.Y + 0.1f).id].friction, gameTime.ElapsedGameTime.TotalSeconds);
                 }
 
                 if (isGrounded || !hasDoubleJumped) {

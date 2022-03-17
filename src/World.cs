@@ -23,8 +23,8 @@ namespace CyberCity {
                 Tile[,] chunk = new Tile[16, 16];
                 for (int x = 0; x < 16; x++) {
                     for (int y = 0; y < 16; y++) {
-                        if (y >= 12) { chunk[x, y] = new Tile(1); }
-                        else chunk[x, y] = new Tile(0);
+                        if (y >= 12) { chunk[x, y] = new Tile("IndustrialTile01"); }
+                        else chunk[x, y] = new Tile("Air");
                     }
                 }
                 chunks[i] = chunk;
@@ -36,37 +36,42 @@ namespace CyberCity {
             }
         }
 
+        public Tile GetTile(float x, float y) {
+            int chunk = (int)Math.Floor(x / chunkWidth);
+            return chunks[chunk][(int)Math.Floor(x - chunk * chunkWidth) / Tile.width, (int)Math.Floor(y) / Tile.height];
+        }
+
         public void UpdateTileTextures() {
             foreach (KeyValuePair<int, Tile[,]> chunk in chunks) {
                 for (int x = 0; x < 16; x++) {
                     for (int y = 0; y < 16; y++) {
                         Tile tile = chunk.Value[x, y];
-                        if (tile.type == null) { tile.textureName = null; continue; }
+                        if (!TileType.types[tile.id].visible) { tile.textureName = null; continue; }
                         Dictionary<char, bool> sides = new Dictionary<char, bool> { { 'N', false }, { 'E', false }, { 'S', false }, { 'W', false } };
 
-                        if (y > 0 && chunk.Value[x, y - 1].type != tile.type) sides['N'] = true;
-                        if (y < 15 && chunk.Value[x, y + 1].type != tile.type) sides['S'] = true;
-                        if (x < 15) { if (chunk.Value[x + 1, y].type != tile.type) sides['E'] = true; }
-                        else if (chunks.ContainsKey(chunk.Key + 1)) { if (chunks[chunk.Key + 1][0, y].type != tile.type) sides['E'] = true; }
-                        if (x > 0) { if (chunk.Value[x - 1, y].type != tile.type) sides['W'] = true; }
-                        else if (chunks.ContainsKey(chunk.Key - 1)) { if (chunks[chunk.Key - 1][15, y].type != tile.type) sides['W'] = true; }
+                        if (y > 0 && chunk.Value[x, y - 1].id != tile.id) sides['N'] = true;
+                        if (y < 15 && chunk.Value[x, y + 1].id != tile.id) sides['S'] = true;
+                        if (x < 15) { if (chunk.Value[x + 1, y].id != tile.id) sides['E'] = true; }
+                        else if (chunks.ContainsKey(chunk.Key + 1)) { if (chunks[chunk.Key + 1][0, y].id != tile.id) sides['E'] = true; }
+                        if (x > 0) { if (chunk.Value[x - 1, y].id != tile.id) sides['W'] = true; }
+                        else if (chunks.ContainsKey(chunk.Key - 1)) { if (chunks[chunk.Key - 1][15, y].id != tile.id) sides['W'] = true; }
 
                         Dictionary<string, bool> corners = new Dictionary<string, bool> { { "NE", false }, { "SE", false }, { "SW", false }, { "NW", false } };
                         if (x < 15) {
-                            if (y > 0 && chunk.Value[x + 1, y - 1].type != tile.type) corners["NE"] = true;
-                            if ( y < 15 && chunk.Value[x + 1, y + 1].type != tile.type) corners["SE"] = true;
+                            if (y > 0 && chunk.Value[x + 1, y - 1].id != tile.id) corners["NE"] = true;
+                            if ( y < 15 && chunk.Value[x + 1, y + 1].id != tile.id) corners["SE"] = true;
                         }
                         else if (chunks.ContainsKey(chunk.Key + 1)) {
-                            if (y > 0 && chunks[chunk.Key + 1][0, y - 1].type != tile.type) corners["NE"] = true;
-                            if (y < 15 && chunks[chunk.Key + 1][0, y + 1].type != tile.type) corners["SE"] = true;
+                            if (y > 0 && chunks[chunk.Key + 1][0, y - 1].id != tile.id) corners["NE"] = true;
+                            if (y < 15 && chunks[chunk.Key + 1][0, y + 1].id != tile.id) corners["SE"] = true;
                         }
                         if (x > 0) {
-                            if (y < 15 && chunk.Value[x - 1, y + 1].type != tile.type) corners["SW"] = true;
-                            if (y > 0 && chunk.Value[x - 1, y - 1].type != tile.type) corners["NW"] = true;
+                            if (y < 15 && chunk.Value[x - 1, y + 1].id != tile.id) corners["SW"] = true;
+                            if (y > 0 && chunk.Value[x - 1, y - 1].id != tile.id) corners["NW"] = true;
                         }
                         else if (chunks.ContainsKey(chunk.Key - 1)) {
-                            if (y < 15 && chunks[chunk.Key - 1][15, y + 1].type != tile.type) corners["SW"] = true;
-                            if (y > 0 && chunks[chunk.Key - 1][15, y - 1].type != tile.type) corners["NW"] = true;
+                            if (y < 15 && chunks[chunk.Key - 1][15, y + 1].id != tile.id) corners["SW"] = true;
+                            if (y > 0 && chunks[chunk.Key - 1][15, y - 1].id != tile.id) corners["NW"] = true;
                         }
 
                         string textureName = "";
@@ -92,7 +97,7 @@ namespace CyberCity {
                         }
 
 
-                        chunk.Value[x, y].textureName = $"World\\{chunk.Value[x, y].type}\\{textureName}";
+                        chunk.Value[x, y].textureName = $"World\\{chunk.Value[x, y].id}\\{textureName}";
                     }
                 }
             }
@@ -107,7 +112,7 @@ namespace CyberCity {
             foreach (KeyValuePair<int, Tile[,]> chunk in chunks) {
                 for (int x = 0; x < 16; x++) {
                     for (int y = 0; y < 16; y++) {
-                        if (chunk.Value[x, y].type != null) {
+                        if (TileType.types[chunk.Value[x, y].id].collideable) {
                             hitBox.Add(new Rectangle(x * Tile.width + chunk.Key * chunkWidth, y * Tile.height, Tile.width, Tile.height));
                         }
                     }
