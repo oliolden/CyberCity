@@ -41,7 +41,7 @@ namespace CyberCity {
                 for (int x = 0; x < 16; x++) {
                     for (int y = 0; y < 16; y++) {
                         Tile tile = chunk.Value[x, y];
-                        if (tile.type == null) { tile.texture = null; continue; }
+                        if (tile.type == null) { tile.textureName = null; continue; }
                         Dictionary<char, bool> sides = new Dictionary<char, bool> { { 'N', false }, { 'E', false }, { 'S', false }, { 'W', false } };
 
                         if (y > 0 && chunk.Value[x, y - 1].type != tile.type) sides['N'] = true;
@@ -92,7 +92,7 @@ namespace CyberCity {
                         }
 
 
-                        chunk.Value[x, y].texture = game.textures[$"World\\{chunk.Value[x, y].type}\\{textureName}"];
+                        chunk.Value[x, y].textureName = $"World\\{chunk.Value[x, y].type}\\{textureName}";
                     }
                 }
             }
@@ -136,8 +136,8 @@ namespace CyberCity {
                 for (int x = 0; x < 16; x++) {
                     for (int y = 0; y < 16; y++) {
                         Tile tile = chunks[i][x, y];
-                        if (tile.texture != null)
-                            batch.Draw(tile.texture, new Vector2((float)x * Tile.width + i * chunkWidth, (float)y * Tile.height), null, tile.color, 0f, Vector2.Zero, Vector2.One, SpriteEffects.None, 0f);
+                        if (tile.textureName != null)
+                            batch.Draw(game.textures[tile.textureName], new Vector2((float)x * Tile.width + i * chunkWidth, (float)y * Tile.height), null, tile.color, 0f, Vector2.Zero, Vector2.One, SpriteEffects.None, 0f);
                     }
                 }
 

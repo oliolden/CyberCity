@@ -13,7 +13,7 @@ namespace CyberCity {
         };
 
         public string type;
-        public Texture2D texture;
+        public string textureName;
         public Color color;
 
         public Tile(string _type) {
