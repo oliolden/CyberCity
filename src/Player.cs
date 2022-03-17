@@ -24,6 +24,7 @@ namespace CyberCity {
         private bool isSprinting;
         private bool runAttack;
         private bool noClip;
+        private bool isStuck;
 
         private Point hitBoxSize;
 
@@ -38,6 +39,7 @@ namespace CyberCity {
                 { "doublejump", new Animation(game.textures["Cyborg\\Cyborg_doublejump"], 5, false, 0.1f) },
                 { "run_attack", new Animation(game.textures["Cyborg\\Cyborg_run_attack"], 6, false) },
                 { "punch", new Animation(game.textures["Cyborg\\Cyborg_punch"], 6, false, 0.1f) },
+                { "hurt", new Animation(game.textures["Cyborg\\Cyborg_hurt"], 2, true, 0.5f) },
             };
             _animationManager = new AnimationManager(_animations["idle"]);
 
@@ -52,6 +54,7 @@ namespace CyberCity {
             isRunning = false;
             isAttacking = false;
             runAttack = false;
+            isStuck = false;
             noClip = false;
             UpdateHitBox();
         }
@@ -67,6 +70,7 @@ namespace CyberCity {
             }
 
             if (noClip) {
+                playAnimation("idle");
                 float noClipSpeed = 1000;
                 color = new Color(100, 100, 100, 100);
                 velocity = Vector2.Zero;
@@ -83,74 +87,80 @@ namespace CyberCity {
                     velocity.X += noClipSpeed;
                 }
                 position += velocity * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                UpdateHitBox();
                 return;
             }
             else {
                 color = Color.White;
             }
 
-            // Movement
-            isRunning = false;
-            if (isGrounded) hasDoubleJumped = false;
-            if (keyboardState.IsKeyDown(Keys.LeftShift)) isSprinting = true; else isSprinting = false;
-
-            if (keyboardState.IsKeyDown(Keys.D) || keyboardState.IsKeyDown(Keys.A)) {
-                if (keyboardState.IsKeyDown(Keys.D)) {
-                    spriteEffects = SpriteEffects.None;
-                    velocity.X += acceleration * (float)gameTime.ElapsedGameTime.TotalSeconds; if (velocity.X > topSpeed + (isSprinting ? sprintBoost : 0)) { velocity.X = topSpeed + (isSprinting ? sprintBoost : 0); }
-                }
-                if (keyboardState.IsKeyDown(Keys.A)) {
-                    spriteEffects = SpriteEffects.FlipHorizontally;
-                    velocity.X -= acceleration * (float)gameTime.ElapsedGameTime.TotalSeconds; if (velocity.X < -topSpeed - (isSprinting ? sprintBoost : 0)) { velocity.X = -topSpeed - (isSprinting ? sprintBoost : 0); }
-                }
-                if (!isBlocked) {
-                    isRunning = true;
-                }
-            }
+            if (CollidesAny()) { isStuck = true; }
             else {
-                velocity.X = velocity.X * (float)Math.Pow(0.001f, gameTime.ElapsedGameTime.TotalSeconds);
-            }
+                // Movement
+                isRunning = false;
+                if (isGrounded) hasDoubleJumped = false;
+                if (keyboardState.IsKeyDown(Keys.LeftShift)) isSprinting = true; else isSprinting = false;
 
-            if (isGrounded || !hasDoubleJumped) {
-                if (keyboardState.IsKeyDown(Keys.Space)) {
-                    if (prevKeyboardState.IsKeyUp(Keys.Space)) {
-                        velocity.Y = -500f;
-                        if (!isGrounded) hasDoubleJumped = true;
+                if (keyboardState.IsKeyDown(Keys.D) || keyboardState.IsKeyDown(Keys.A)) {
+                    if (keyboardState.IsKeyDown(Keys.D)) {
+                        spriteEffects = SpriteEffects.None;
+                        velocity.X += acceleration * (float)gameTime.ElapsedGameTime.TotalSeconds; if (velocity.X > topSpeed + (isSprinting ? sprintBoost : 0)) { velocity.X = topSpeed + (isSprinting ? sprintBoost : 0); }
+                    }
+                    if (keyboardState.IsKeyDown(Keys.A)) {
+                        spriteEffects = SpriteEffects.FlipHorizontally;
+                        velocity.X -= acceleration * (float)gameTime.ElapsedGameTime.TotalSeconds; if (velocity.X < -topSpeed - (isSprinting ? sprintBoost : 0)) { velocity.X = -topSpeed - (isSprinting ? sprintBoost : 0); }
+                    }
+                    if (!isBlocked) {
+                        isRunning = true;
                     }
                 }
-            }
-            velocity.Y += 20.0f;
-
-            // Update X position
-            position.X += velocity.X * (float)gameTime.ElapsedGameTime.TotalSeconds;
-            UpdateHitBox();
-            isBlocked = false;
-            if (CollidesAny()) {
-                if (Math.Abs(velocity.X) > 0) { isBlocked = true; }
-                int i = 0;
-                while (CollidesAny() && i < 1000) {
-                    position.X -= 0.01f * velocity.X / Math.Abs(velocity.X);
-                    UpdateHitBox();
-                    i++;
+                else {
+                    velocity.X = velocity.X * (float)Math.Pow(0.001f, gameTime.ElapsedGameTime.TotalSeconds);
                 }
-                velocity.X = 0;
+
+                if (isGrounded || !hasDoubleJumped) {
+                    if (keyboardState.IsKeyDown(Keys.Space)) {
+                        if (prevKeyboardState.IsKeyUp(Keys.Space)) {
+                            velocity.Y = -500f;
+                            if (!isGrounded) hasDoubleJumped = true;
+                        }
+                    }
+                }
+                if (!isGrounded) velocity.Y += 20.0f;
+
+                isStuck = false;
+                // Update X position
+                position.X += velocity.X * (float)gameTime.ElapsedGameTime.TotalSeconds;
                 UpdateHitBox();
-            }
-
-            // Update Y position
-            position.Y += velocity.Y * (float)gameTime.ElapsedGameTime.TotalSeconds;
-            UpdateHitBox();
-            isGrounded = false;
-            if (CollidesAny()) {
-                if (velocity.Y > 0) { isGrounded = true; }
-                int i = 0;
-                while (CollidesAny() && i < 1000) {
-                    position.Y -= 0.01f * velocity.Y / Math.Abs(velocity.Y);
+                isBlocked = false;
+                if (CollidesAny()) {
+                    if (Math.Abs(velocity.X) > 0) { isBlocked = true; }
+                    int i = 0;
+                    while (CollidesAny() && i < Math.Abs(velocity.X) / 0.01f) {
+                        position.X -= 0.01f * velocity.X / Math.Abs(velocity.X);
+                        UpdateHitBox();
+                        i++;
+                    }
+                    velocity.X = 0;
                     UpdateHitBox();
-                    i++;
                 }
-                velocity.Y = 0;
+
+                // Update Y position
+                position.Y += velocity.Y * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                UpdateHitBox();
+                isGrounded = false;
+                if (CollidesAny()) {
+                    if (velocity.Y > 0) { isGrounded = true; }
+                    int i = 0;
+                    while (CollidesAny() && i < Math.Abs(velocity.Y) / 0.01f) {
+                        position.Y -= 0.01f * velocity.Y / Math.Abs(velocity.Y);
+                        UpdateHitBox();
+                        i++;
+                    }
+                    velocity.Y = 0;
+                }
             }
+            if (!isGrounded) { position.Y += 1; UpdateHitBox(); if (CollidesAny()) { isGrounded = true; } position.Y -= 1; UpdateHitBox(); }
 
             // Attacking
             if (!isAttacking && isGrounded && mouseState.LeftButton == ButtonState.Pressed) {
@@ -161,13 +171,16 @@ namespace CyberCity {
             else { isAttacking = false; }
 
             // Animations
-            if(!isGrounded) { if (hasDoubleJumped) playAnimation("doublejump"); else playAnimation("jump"); }
-            else if (isAttacking) { if (runAttack) playAnimation("run_attack"); else playAnimation("punch"); }
-            else if (isRunning) playAnimation("run");
-            else { playAnimation("idle"); }
+            if (isStuck) { playAnimation("hurt"); }
+            else {
+                if (!isGrounded) { if (hasDoubleJumped) playAnimation("doublejump"); else playAnimation("jump"); }
+                else if (isAttacking) { if (runAttack) playAnimation("run_attack"); else playAnimation("punch"); }
+                else if (isRunning) playAnimation("run");
+                else { playAnimation("idle"); }
 
-            if (isGrounded && isRunning) _animationManager.animation.frameTime = Math.Abs(8f / velocity.X);
-            else if (isGrounded && isAttacking && runAttack) _animationManager.animation.frameTime = 0.1f;
+                if (isGrounded && isRunning) _animationManager.animation.frameTime = Math.Abs(8f / velocity.X);
+                else if (isGrounded && isAttacking && runAttack) _animationManager.animation.frameTime = 0.1f;
+            }
 
             _animationManager.Update(gameTime);
         }
