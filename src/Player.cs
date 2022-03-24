@@ -6,57 +6,43 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
 namespace CyberCity {
-    internal class Player : GameObject {
-        private Dictionary<string, Animation> _animations;
-        private AnimationManager _animationManager;
-
-        public Vector2 velocity;
-        private float topSpeed;
+    internal class Player : Character {
         private float sprintBoost;
-        private float acceleration;
 
         // Bools
-        private bool isGrounded;
         private bool isRunning;
         private bool isAttacking;
         private bool hasDoubleJumped;
-        private bool isBlocked;
         private bool isSprinting;
         private bool runAttack;
         private bool noClip;
-        private bool isStuck;
-
-        private Point hitBoxSize;
 
         private KeyboardState keyboardState;
         private MouseState mouseState;
 
-        public Player(Scene myScene) : base(myScene) {
-            _animations = new Dictionary<string, Animation> {
+        public Player(Scene scene) : base(scene) {
+            animations = new Dictionary<string, Animation> {
                 { "idle", new Animation(game.textures["Cyborg\\Cyborg_idle"], 4, true) },
                 { "run", new Animation(game.textures["Cyborg\\Cyborg_run"], 6, true) },
                 { "jump", new Animation(game.textures["Cyborg\\Cyborg_jump"], 4, false) },
                 { "doublejump", new Animation(game.textures["Cyborg\\Cyborg_doublejump"], 5, false, 0.1f) },
                 { "run_attack", new Animation(game.textures["Cyborg\\Cyborg_run_attack"], 6, false) },
                 { "punch", new Animation(game.textures["Cyborg\\Cyborg_punch"], 6, false, 0.1f) },
-                { "hurt", new Animation(game.textures["Cyborg\\Cyborg_hurt"], 2, true, 0.5f) },
+                { "hurt", new Animation(game.textures["Cyborg\\Cyborg_hurt"], 2, false, 0.2f) },
             };
-            _animationManager = new AnimationManager(_animations["idle"]);
+            animationManager = new AnimationManager(animations["idle"]);
 
-            origin = new Vector2(_animationManager.animation.frameWidth / 4, _animationManager.animation.frameHeight);
+            origin = new Vector2(animationManager.animation.frameWidth / 4, animationManager.animation.frameHeight);
             position = new Vector2(game.Window.ClientBounds.Width / 2, game.Window.ClientBounds.Height / 2);
-            velocity = Vector2.Zero;
             topSpeed = 100.0f;
             sprintBoost = 50.0f;
             acceleration = 400.0f;
-            hitBoxSize = new Point(24, 36); // 24, 36
-            isGrounded = false;
+            hitBoxSize = new Point(16, 32); // 24, 36
             isRunning = false;
             isAttacking = false;
             runAttack = false;
-            isStuck = false;
             noClip = false;
-            UpdateHitBox();
+            layer = 3f;
         }
 
         public override void Update(GameTime gameTime) {
@@ -70,8 +56,8 @@ namespace CyberCity {
             }
 
             if (noClip) {
-                playAnimation("idle");
-                float noClipSpeed = 1000;
+                PlayAnimation("idle");
+                float noClipSpeed = 250;
                 color = new Color(100, 100, 100, 100);
                 velocity = Vector2.Zero;
                 if (keyboardState.IsKeyDown(Keys.W)) {
@@ -96,26 +82,22 @@ namespace CyberCity {
 
             if (CollidesAny()) { isStuck = true; }
             else {
+                isStuck = false;
                 // Movement
                 isRunning = false;
                 if (isGrounded) hasDoubleJumped = false;
                 if (keyboardState.IsKeyDown(Keys.LeftShift)) isSprinting = true; else isSprinting = false;
-
+                isWalking = false;
                 if (keyboardState.IsKeyDown(Keys.D) || keyboardState.IsKeyDown(Keys.A)) {
                     if (keyboardState.IsKeyDown(Keys.D)) {
-                        spriteEffects = SpriteEffects.None;
-                        velocity.X += acceleration * (float)gameTime.ElapsedGameTime.TotalSeconds; if (velocity.X > topSpeed + (isSprinting ? sprintBoost : 0)) { velocity.X = topSpeed + (isSprinting ? sprintBoost : 0); }
+                        Walk(gameTime, false, topSpeed + (isSprinting ? sprintBoost : 0));
                     }
                     if (keyboardState.IsKeyDown(Keys.A)) {
-                        spriteEffects = SpriteEffects.FlipHorizontally;
-                        velocity.X -= acceleration * (float)gameTime.ElapsedGameTime.TotalSeconds; if (velocity.X < -topSpeed - (isSprinting ? sprintBoost : 0)) { velocity.X = -topSpeed - (isSprinting ? sprintBoost : 0); }
+                        Walk(gameTime, true, topSpeed + (isSprinting ? sprintBoost : 0));
                     }
                     if (!isBlocked) {
                         isRunning = true;
                     }
-                }
-                else {
-                    velocity.X = velocity.X * (float)Math.Pow(TileType.types[((World)scene.objects["World"]).GetTile(position.X, position.Y + 0.1f).id].friction, gameTime.ElapsedGameTime.TotalSeconds);
                 }
 
                 if (isGrounded || !hasDoubleJumped) {
@@ -126,76 +108,39 @@ namespace CyberCity {
                         }
                     }
                 }
-                if (!isGrounded) velocity.Y += 20.0f;
 
-                isStuck = false;
-                // Update X position
-                position.X += velocity.X * (float)gameTime.ElapsedGameTime.TotalSeconds;
-                UpdateHitBox();
-                isBlocked = false;
-                if (CollidesAny()) {
-                    if (Math.Abs(velocity.X) > 0) { isBlocked = true; }
-                    int i = 0;
-                    while (CollidesAny() && i < Math.Abs(velocity.X) / 0.01f) {
-                        position.X -= 0.01f * velocity.X / Math.Abs(velocity.X);
-                        UpdateHitBox();
-                        i++;
-                    }
-                    velocity.X = 0;
-                    UpdateHitBox();
-                }
+                // Physics
+                PhysicsUpdate(gameTime);
 
-                // Update Y position
-                position.Y += velocity.Y * (float)gameTime.ElapsedGameTime.TotalSeconds;
-                UpdateHitBox();
-                isGrounded = false;
-                if (CollidesAny()) {
-                    if (velocity.Y > 0) { isGrounded = true; }
-                    int i = 0;
-                    while (CollidesAny() && i < Math.Abs(velocity.Y) / 0.01f) {
-                        position.Y -= 0.01f * velocity.Y / Math.Abs(velocity.Y);
-                        UpdateHitBox();
-                        i++;
-                    }
-                    velocity.Y = 0;
-                }
             }
-            if (!isGrounded) { position.Y += 1; UpdateHitBox(); if (CollidesAny()) { isGrounded = true; } position.Y -= 1; UpdateHitBox(); }
 
             // Attacking
             if (!isAttacking && isGrounded && mouseState.LeftButton == ButtonState.Pressed) {
                 isAttacking = true;
                 runAttack = isRunning;
             }
-            else if (isAttacking && _animationManager.animation.currentFrame < 5) { }
+            else if (isAttacking && animationManager.animation.currentFrame < 5) { }
             else { isAttacking = false; }
 
             // Animations
-            if (isStuck) { playAnimation("hurt"); }
+            if (isStuck) { PlayAnimation("idle"); color = (int)(gameTime.TotalGameTime.TotalMilliseconds / 500) % 2 == 0 ? Color.Red : Color.White; }
             else {
-                if (!isGrounded) { if (hasDoubleJumped) playAnimation("doublejump"); else playAnimation("jump"); }
-                else if (isAttacking) { if (runAttack) playAnimation("run_attack"); else playAnimation("punch"); }
-                else if (isRunning) playAnimation("run");
-                else { playAnimation("idle"); }
+                color = Color.White;
+                if (!isGrounded) { if (hasDoubleJumped) PlayAnimation("doublejump"); else PlayAnimation("jump"); }
+                else if (isAttacking) { if (runAttack) PlayAnimation("run_attack"); else PlayAnimation("punch"); }
+                else if (isRunning) PlayAnimation("run");
+                else { PlayAnimation("idle"); }
 
-                if (isGrounded && isRunning) _animationManager.animation.frameTime = Math.Abs(8f / velocity.X);
-                else if (isGrounded && isAttacking && runAttack) _animationManager.animation.frameTime = 0.1f;
+                if (isGrounded && isRunning) animationManager.animation.frameTime = Math.Abs(8f / velocity.X);
+                else if (isGrounded && isAttacking && runAttack) animationManager.animation.frameTime = 0.1f;
             }
 
-            _animationManager.Update(gameTime);
-        }
-
-        private void playAnimation(string animationName) {
-            _animationManager.Play(_animations[animationName]);
-        }
-
-        private void UpdateHitBox() {
-            hitBox = new List<Rectangle> { new Rectangle((int)(position.X - origin.X), (int)(position.Y - origin.Y + 12), hitBoxSize.X, hitBoxSize.Y) };
+            animationManager.Update(gameTime);
         }
 
         public override void Draw(SpriteBatch batch, GameTime gameTime) {
-            _animationManager.Draw(batch, position - Vector2.UnitX * (spriteEffects == SpriteEffects.FlipHorizontally ? 24 : 0), color, rotation, origin, scale, spriteEffects);
-            batch.DrawString(game.fonts["Fonts\\Arial"], $"XY: {string.Format("{0:#0.00}", position.X)}, {string.Format("{0:#0.00}", position.Y)}", scene.camera.position, Color.Lime, 0f, Vector2.Zero, 1 / scene.camera.zoom, SpriteEffects.None, 0f);
+            base.Draw(batch, gameTime);
+            if (((GameScene)scene).devTools) batch.DrawString(game.fonts["Fonts\\Minecraft"], $"XY: {Math.Floor(position.X / Tile.width)}, {Math.Floor(position.Y / Tile.height)}", scene.camera.position + (Vector2.One * 4) / scene.camera.zoom, Color.Black, 0f, Vector2.Zero, 1.5f / scene.camera.zoom, SpriteEffects.None, 1f);
         }
     }
 }

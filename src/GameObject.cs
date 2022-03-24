@@ -16,7 +16,8 @@ namespace CyberCity {
         public SpriteEffects spriteEffects;
         public bool enabled;
         public List<Rectangle> hitBox;
-        public bool collideable;
+        public bool collisions;
+        public float layer;
 
         public GameObject(Scene myScene) {
             scene = myScene;
@@ -28,7 +29,8 @@ namespace CyberCity {
             color = Color.White;
             spriteEffects = SpriteEffects.None;
             enabled = true;
-            collideable = true;
+            collisions = true;
+            layer = 1f;
         }
 
         public bool Collides(GameObject target) {
@@ -43,14 +45,21 @@ namespace CyberCity {
 
         public bool CollidesAny() {
             foreach (GameObject gameObject in scene.objects.Values) {
-                if (gameObject != this && gameObject.collideable && Collides(gameObject)) {
+                if (gameObject != this && gameObject.collisions && Collides(gameObject)) {
                     return true;
                 }
             }
             return false;
         }
 
+        public void DrawHitBox(SpriteBatch batch) {
+            Color color = collisions ? new Color(0, 0, 255, 1) : new Color(0, 255, 0, 1);
+            foreach (Rectangle box in hitBox) {
+                batch.Draw(game.textures["Blank"], box, null, color, 0, Vector2.Zero, SpriteEffects.None, 999f);
+            }
+        }
+
         public virtual void Update(GameTime gameTime) { }
-        public virtual void Draw(SpriteBatch batch, GameTime gameTime) { }
+        public virtual void Draw(SpriteBatch batch, GameTime gameTime) { if (((GameScene)scene).devTools) DrawHitBox(batch); }
     }
 }

@@ -83,7 +83,7 @@ namespace CyberCity {
             GraphicsDevice.Clear(_currentScene.backgroundColor);
 
             // TODO: Add your drawing code here
-            _spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, null, null, null, _currentScene.camera.matrix);
+            _spriteBatch.Begin(SpriteSortMode.FrontToBack, BlendState.AlphaBlend, SamplerState.PointClamp, null, null, null, _currentScene.camera.matrix);
             _currentScene.Draw(_spriteBatch, gameTime);
             _spriteBatch.End();
 

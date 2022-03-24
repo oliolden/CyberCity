@@ -32,8 +32,8 @@ namespace CyberCity {
             }
         }
 
-        public void Draw(SpriteBatch batch, Vector2 position, Color color, float rotation, Vector2 origin, Vector2 scale, SpriteEffects effects) {
-            batch.Draw(animation.texture, position, animation.frameRect, color, rotation, origin, scale, effects, 0f);
+        public void Draw(SpriteBatch batch, Vector2 position, Color color, float rotation, Vector2 origin, Vector2 scale, SpriteEffects effects, float layer) {
+            batch.Draw(animation.texture, position, animation.frameRect, color, rotation, origin, scale, effects, layer);
         }
     }
 }
