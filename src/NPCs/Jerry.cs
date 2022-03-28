@@ -16,17 +16,21 @@ namespace CyberCity {
             position = new Vector2(game.Window.ClientBounds.Width / 2, game.Window.ClientBounds.Height / 2);
             topSpeed = 79.0f;
             acceleration = 200.0f;
+            jumpStrength = 300.0f;
             hitBoxSize = new Point(16, 26);
             destination = position + Vector2.UnitX * random.Next(-400, 400);
         }
 
         public override void Update(GameTime gameTime) {
-            if (random.Next(0, 300) == 0) { destination = position + Vector2.UnitX * random.Next(-200, 200); }
             Move(gameTime);
             PhysicsUpdate(gameTime);
             if (isWalking && !isBlocked) { PlayAnimation("walk"); animationManager.animation.frameTime = Math.Abs(8f / velocity.X); }
             else PlayAnimation("idle");
             animationManager.Update(gameTime);
+        }
+
+        protected override void NewDestination() {
+            destination = position + Vector2.UnitX * random.Next(-200, 200);
         }
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 
 namespace CyberCity {
     internal class Camera {
@@ -13,6 +14,7 @@ namespace CyberCity {
         public float zoom;
         public Viewport viewport;
         public Matrix matrix;
+        public Vector2 mousePosition { get { return Mouse.GetState().Position.ToVector2() / zoom + position; } set { } }
 
         public Camera(Game1 myGame) {
             game = myGame;

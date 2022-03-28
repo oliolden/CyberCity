@@ -37,6 +37,7 @@ namespace CyberCity {
             topSpeed = 100.0f;
             sprintBoost = 50.0f;
             acceleration = 400.0f;
+            jumpStrength = 500.0f;
             hitBoxSize = new Point(16, 32); // 24, 36
             isRunning = false;
             isAttacking = false;
@@ -45,11 +46,23 @@ namespace CyberCity {
             layer = 3f;
         }
 
+        Vector2 mousePos;
+
         public override void Update(GameTime gameTime) {
             KeyboardState prevKeyboardState = keyboardState;
             MouseState prevMouseState = mouseState;
             keyboardState = Keyboard.GetState();
             mouseState = Mouse.GetState();
+
+
+            if (mouseState.LeftButton == ButtonState.Pressed) {
+                Vector2 pos = scene.camera.mousePosition;
+                ((World)scene.objects["World"]).SetTile((int)pos.X/Tile.width, (int)pos.Y/Tile.height, true);
+            }
+            if (mouseState.RightButton == ButtonState.Pressed) {
+                Vector2 pos = scene.camera.mousePosition;
+                ((World)scene.objects["World"]).SetTile((int)pos.X/Tile.width, (int)pos.Y/Tile.height, false);
+            }
 
             if (keyboardState.IsKeyDown(Keys.V) && prevKeyboardState.IsKeyUp(Keys.V)) {
                 noClip = !noClip;
@@ -103,7 +116,7 @@ namespace CyberCity {
                 if (isGrounded || !hasDoubleJumped) {
                     if (keyboardState.IsKeyDown(Keys.Space)) {
                         if (prevKeyboardState.IsKeyUp(Keys.Space)) {
-                            velocity.Y = -500f;
+                            velocity.Y = -jumpStrength;
                             if (!isGrounded) hasDoubleJumped = true;
                         }
                     }

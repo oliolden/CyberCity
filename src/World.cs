@@ -10,9 +10,11 @@ namespace CyberCity {
     internal class World : GameObject {
         public Texture2D[] backgrounds;
         public Dictionary<int, Tile[,]> chunks;
-        private static int chunkWidth = 32 * 16;
+        private static Point chunkTileSize = new Point(32, 32);
+        private static Point chunkSize = new Point(chunkTileSize.X * Tile.width, chunkTileSize.Y * Tile.height);
+        private static Point[] offsets = { new Point(-1, -1), new Point(0, -1), new Point(1, -1), new Point(-1, 0), new Point(1, 0), new Point(-1, 1), new Point(0, 1), new Point(1, 1), };
         Random random;
-        private int currentChunk { get { return (int)Math.Floor(scene.camera.center.X / chunkWidth); } set { } }
+        private int currentChunk { get { return (int)Math.Floor(scene.camera.center.X / chunkSize.X); } set { } }
 
         public World(Scene myScene, int seed = 0) : base(myScene) { random = new Random(seed); chunks = new Dictionary<int, Tile[,]>(); GenerateChunks(-3, 3); layer = 0f; }
 
@@ -20,126 +22,100 @@ namespace CyberCity {
             bool hasGenerated = false;
             for (int i = start; i <= end; i++) {
                 if (chunks.ContainsKey(i)) continue;
-                Tile[,] chunk = new Tile[16, 16];
-                for (int x = 0; x < 16; x++) {
-                    for (int y = 0; y < 16; y++) {
-                        if (y >= 12) { chunk[x, y] = new Tile("IndustrialTile01"); }
-                        else chunk[x, y] = new Tile("Air");
+                Tile[,] chunk = new Tile[chunkTileSize.X, chunkTileSize.Y];
+                for (int x = 0; x < chunkTileSize.X; x++) {
+                    for (int y = 0; y < chunkTileSize.Y; y++) {
+                        if (y >= 16) { chunk[x, y] = new Tile("metal"); }
+                        else chunk[x, y] = new Tile("air");
                     }
                 }
                 chunks[i] = chunk;
                 hasGenerated = true;
+                for (int x = 0; x < chunkTileSize.X; x++) {
+                    for (int y = 0; y < chunkTileSize.Y; y++) {
+                        UpdateTileTexture(i, x, y);
+                    }
+                }
+                if (chunks.ContainsKey(i - 1))
+                    for (int y = 0; y < chunkTileSize.Y; y++) {
+                        UpdateTileTexture(i - 1, chunkTileSize.X - 1, y);
+                    }
+                if (chunks.ContainsKey(i + 1))
+                    for (int y = 0; y < chunkTileSize.Y; y++) {
+                        UpdateTileTexture(i + 1, 0, y);
+                    }
             }
             if (hasGenerated) {
-                UpdateTileTextures();
                 UpdateHitBox();
             }
         }
 
         public Tile GetTile(float x, float y) {
-            int chunk = (int)Math.Floor(x / chunkWidth);
-            return chunks[chunk][(int)Math.Floor(x - chunk * chunkWidth) / Tile.width, (int)Math.Floor(y) / Tile.height];
+            int chunk = (int)Math.Floor(x / chunkSize.X);
+            if (!chunks.ContainsKey(chunk)) return new Tile("air");
+            return chunks[chunk][(int)Math.Floor(x - chunk * chunkSize.X) / Tile.width, (int)Math.Floor(y) / Tile.height];
         }
 
-        //public void UpdateTileTextures() {
-        //    foreach (KeyValuePair<int, Tile[,]> chunk in chunks) {
-        //        for (int x = 0; x < 16; x++) {
-        //            for (int y = 0; y < 16; y++) {
-        //                Tile tile = chunk.Value[x, y];
-        //                if (!TileType.types[tile.id].visible) { tile.textureName = null; continue; }
-        //                bool[] corners = { false, false, false, false };
+        public void UpdateTileTexture(int chunkIndex, int x, int y) {
+            Tile[,] chunk = chunks[chunkIndex];
+            Tile tile = chunk[x, y];
+            if (!TileType.types[tile.id].visible) { tile.textureName = null; return; }
+            bool[] check = { false, false, false, false, false, false, false, false, };
+            bool[] bools;
 
-        //                bool CheckTile(int xOffset, int yOffset) {
-        //                    if (y + yOffset < 0 || y + yOffset >= 16) return false;
-        //                    if (x + xOffset >= 0 && x + xOffset < 16) return chunk.Value[x + xOffset, y + yOffset].id == tile.id;
-        //                    else {
-        //                        int testChunk = chunk.Key + (x + xOffset) / 16;
-        //                        if (chunks.ContainsKey(testChunk)) { return chunks[testChunk][(x + xOffset) % 16, y].id == tile.id; }
-        //                        else return false;
-        //                    }
-        //                }
+            bool CheckTile(Point offset) {
+                if (y + offset.Y < 0 || y + offset.Y >= chunkTileSize.Y) return false;
+                if (x + offset.X >= 0 && x + offset.X < chunkTileSize.X) return chunk[x + offset.X, y + offset.Y].id == tile.id;
+                else {
+                    int testChunk = chunkIndex + (int)Math.Floor((x + offset.X) / (float)chunkTileSize.X);
+                    if (chunks.ContainsKey(testChunk)) { return chunks[testChunk][(x + offset.X) > 0 ? (x + offset.X) - chunkTileSize.X : chunkTileSize.X + (x + offset.X), y + offset.Y].id == tile.id; }
+                    else return false;
+                }
+            }
 
-        //                if (CheckTile(0, -1)) { corners[0] = true; corners[1] = true; }
-        //                if (CheckTile(1, 0)) { corners[1] = true; corners[3] = true; }
-        //                if (CheckTile(0, 1)) { corners[2] = true; corners[3] = true; }
-        //                if (CheckTile(-1, 0)) { corners[2] = true; corners[0] = true; }
+            string textureName = "";
+            
+            for (int i = 0; i < offsets.Length; i++) {
+                check[i] = CheckTile(offsets[i]);
+            }
 
-        //                if (!corners[0]) { corners[0] = CheckTile(-1, -1); }
-        //                if (!corners[1]) { corners[1] = CheckTile(1, -1); }
-        //                if (!corners[2]) { corners[2] = CheckTile(-1, 1); }
-        //                if (!corners[3]) { corners[3] = CheckTile(1, 1); }
+            bools = check;
 
-        //                string textureName = "";
+            if (!check[1] || !check[3]) bools[0] = false;
+            if (!check[1] || !check[4]) bools[2] = false;
+            if (!check[3] || !check[6]) bools[5] = false;
+            if (!check[4] || !check[6]) bools[7] = false;
 
-        //                foreach (bool corner in corners) {
-        //                    textureName += corner ? 1 : 0;
-        //                }
+            if (!check[0] && !check[2]) bools[1] = false;
+            if (!check[0] && !check[5]) bools[3] = false;
+            if (!check[2] && !check[7]) bools[4] = false;
+            if (!check[5] && !check[7]) bools[6] = false;
 
-        //                chunk.Value[x, y].textureName = $"World\\{chunk.Value[x, y].id}\\{textureName}";
-        //            }
-        //        }
-        //    }
-        //}
+            foreach (bool bit in bools) {
+                textureName += bit ? "1" : "0";
+            }
 
-        public void UpdateTileTextures() {
-            foreach (KeyValuePair<int, Tile[,]> chunk in chunks) {
-                for (int x = 0; x < 16; x++) {
-                    for (int y = 0; y < 16; y++) {
-                        Tile tile = chunk.Value[x, y];
-                        if (!TileType.types[tile.id].visible) { tile.textureName = null; continue; }
-                        Dictionary<char, bool> sides = new Dictionary<char, bool> { { 'N', false }, { 'E', false }, { 'S', false }, { 'W', false } };
+            if (game.textures.Keys.Contains($"World\\Tiles\\{chunk[x, y].id}\\{textureName}")) chunk[x, y].textureName = $"World\\Tiles\\{chunk[x, y].id}\\{textureName}";
+            else chunk[x, y].textureName = $"World\\Tiles\\{chunk[x, y].id}\\00000000";
+        }
 
-                        if (y > 0 && chunk.Value[x, y - 1].id != tile.id) sides['N'] = true;
-                        if (y < 15 && chunk.Value[x, y + 1].id != tile.id) sides['S'] = true;
-                        if (x < 15) { if (chunk.Value[x + 1, y].id != tile.id) sides['E'] = true; }
-                        else if (chunks.ContainsKey(chunk.Key + 1)) { if (chunks[chunk.Key + 1][0, y].id != tile.id) sides['E'] = true; }
-                        if (x > 0) { if (chunk.Value[x - 1, y].id != tile.id) sides['W'] = true; }
-                        else if (chunks.ContainsKey(chunk.Key - 1)) { if (chunks[chunk.Key - 1][15, y].id != tile.id) sides['W'] = true; }
-
-                        Dictionary<string, bool> corners = new Dictionary<string, bool> { { "NE", false }, { "SE", false }, { "SW", false }, { "NW", false } };
-                        if (x < 15) {
-                            if (y > 0 && chunk.Value[x + 1, y - 1].id != tile.id) corners["NE"] = true;
-                            if (y < 15 && chunk.Value[x + 1, y + 1].id != tile.id) corners["SE"] = true;
-                        }
-                        else if (chunks.ContainsKey(chunk.Key + 1)) {
-                            if (y > 0 && chunks[chunk.Key + 1][0, y - 1].id != tile.id) corners["NE"] = true;
-                            if (y < 15 && chunks[chunk.Key + 1][0, y + 1].id != tile.id) corners["SE"] = true;
-                        }
-                        if (x > 0) {
-                            if (y < 15 && chunk.Value[x - 1, y + 1].id != tile.id) corners["SW"] = true;
-                            if (y > 0 && chunk.Value[x - 1, y - 1].id != tile.id) corners["NW"] = true;
-                        }
-                        else if (chunks.ContainsKey(chunk.Key - 1)) {
-                            if (y < 15 && chunks[chunk.Key - 1][15, y + 1].id != tile.id) corners["SW"] = true;
-                            if (y > 0 && chunks[chunk.Key - 1][15, y - 1].id != tile.id) corners["NW"] = true;
-                        }
-
-                        string textureName = "";
-                        if (sides.Values.All(a => !a)) {
-                            if (corners.Values.All(a => !a)) textureName = "NESW";
-                            else if (corners.Values.Where(a => a).Count() > 1) textureName = "Single";
-                            else { textureName = "In" + corners.Where(a => a.Value).First().Key; }
-                        }
-                        else if (sides.Values.All(b => b)) textureName = "Single";
-                        else {
-                            foreach (KeyValuePair<char, bool> side in sides.Where(a => a.Value)) { textureName += side.Key.ToString(); }
-                            foreach (KeyValuePair<string, bool> corner in corners) {
-                                if (corner.Value) {
-                                    bool hasSide = false;
-                                    foreach (KeyValuePair<char, bool> side in sides) {
-                                        if (side.Value) {
-                                            if (corner.Key.Contains(side.Key)) hasSide = true;
-                                        }
-                                    }
-                                    if (!hasSide) textureName = "Single";
-                                }
-                            }
-                        }
-
-
-                        chunk.Value[x, y].textureName = $"World\\{chunk.Value[x, y].id}\\{textureName}";
+        public void SetTile(int x, int y, bool fill) {
+            int chunk = (int)Math.Floor(x / (float)chunkTileSize.X);
+            x = x - chunk * chunkTileSize.X;
+            if (!chunks.ContainsKey(chunk) || y < 0 || y >= chunkTileSize.Y) return;
+            if (chunks[chunk][x, y].id != (fill ? "metal" : "air")) {
+                chunks[chunk][x, y] = fill ? new Tile("metal") : new Tile("air");
+                UpdateTileTexture(chunk, x, y);
+                foreach (Point offset in offsets) {
+                    if (y + offset.Y < 0 || y + offset.Y >= chunkTileSize.Y) continue;
+                    if (x + offset.X >= 0 && x + offset.X < chunkTileSize.X) UpdateTileTexture(chunk, x + offset.X, y + offset.Y);
+                    else {
+                        int nextChunk = chunk + (int)Math.Floor((x + offset.X) / (float)chunkTileSize.X);
+                        if (chunks.ContainsKey(nextChunk)) { UpdateTileTexture(nextChunk, (x + offset.X) > 0 ? (x + offset.X) - chunkTileSize.X : chunkTileSize.X + (x + offset.X), y + offset.Y); }
+                        else continue;
                     }
                 }
+                UpdateHitBox();
             }
         }
 
@@ -150,10 +126,10 @@ namespace CyberCity {
         public void UpdateHitBox() {
             hitBox = new List<Rectangle>();
             foreach (KeyValuePair<int, Tile[,]> chunk in chunks) {
-                for (int x = 0; x < 16; x++) {
-                    for (int y = 0; y < 16; y++) {
+                for (int x = 0; x < chunkTileSize.X; x++) {
+                    for (int y = 0; y < chunkTileSize.Y; y++) {
                         if (TileType.types[chunk.Value[x, y].id].collideable) {
-                            hitBox.Add(new Rectangle(x * Tile.width + chunk.Key * chunkWidth, y * Tile.height, Tile.width, Tile.height));
+                            hitBox.Add(new Rectangle(x * Tile.width + chunk.Key * chunkSize.X, y * Tile.height, Tile.width, Tile.height));
                         }
                     }
                 }
@@ -180,11 +156,11 @@ namespace CyberCity {
             // Draw chunks
             for (int i = currentChunk - 1; i <= currentChunk + 1; i++) {
                 if (!chunks.ContainsKey(i)) continue;
-                for (int x = 0; x < 16; x++) {
-                    for (int y = 0; y < 16; y++) {
+                for (int x = 0; x < chunkTileSize.X; x++) {
+                    for (int y = 0; y < chunkTileSize.Y; y++) {
                         Tile tile = chunks[i][x, y];
                         if (tile.textureName != null)
-                            batch.Draw(game.textures[tile.textureName], new Vector2((float)x * Tile.width + i * chunkWidth, (float)y * Tile.height), null, tile.color, 0f, Vector2.Zero, Vector2.One, SpriteEffects.None, layer + 0.1f);
+                            batch.Draw(game.textures[tile.textureName], new Vector2((float)x * Tile.width + i * chunkSize.X, (float)y * Tile.height), null, tile.color, 0f, Vector2.Zero, Vector2.One, SpriteEffects.None, layer + 0.1f);
                     }
                 }
 

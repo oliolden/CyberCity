@@ -12,6 +12,7 @@ namespace CyberCity {
         public Vector2 velocity;
         protected float topSpeed;
         protected float acceleration;
+        protected float jumpStrength;
         protected bool isGrounded;
         protected bool isBlocked;
         protected bool isStuck;

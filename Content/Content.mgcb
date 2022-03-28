@@ -255,7 +255,7 @@
 /processorParam:TextureFormat=Color
 /build:World/Background/4.png
 
-#begin World/IndustrialTile01/E.png
+#begin World/Tiles/metal/00000000.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -265,9 +265,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:World/IndustrialTile01/E.png
+/build:World/Tiles/metal/00000000.png
 
-#begin World/IndustrialTile01/ES.png
+#begin World/Tiles/metal/00000010.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -277,9 +277,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:World/IndustrialTile01/ES.png
+/build:World/Tiles/metal/00000010.png
 
-#begin World/IndustrialTile01/ESW.png
+#begin World/Tiles/metal/00001000.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -289,9 +289,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:World/IndustrialTile01/ESW.png
+/build:World/Tiles/metal/00001000.png
 
-#begin World/IndustrialTile01/EW.png
+#begin World/Tiles/metal/00001011.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -301,9 +301,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:World/IndustrialTile01/EW.png
+/build:World/Tiles/metal/00001011.png
 
-#begin World/IndustrialTile01/InNE.png
+#begin World/Tiles/metal/00010000.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -313,9 +313,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:World/IndustrialTile01/InNE.png
+/build:World/Tiles/metal/00010000.png
 
-#begin World/IndustrialTile01/InNW.png
+#begin World/Tiles/metal/00010110.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -325,9 +325,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:World/IndustrialTile01/InNW.png
+/build:World/Tiles/metal/00010110.png
 
-#begin World/IndustrialTile01/InSE.png
+#begin World/Tiles/metal/00011000.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -337,9 +337,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:World/IndustrialTile01/InSE.png
+/build:World/Tiles/metal/00011000.png
 
-#begin World/IndustrialTile01/InSW.png
+#begin World/Tiles/metal/00011111.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -349,9 +349,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:World/IndustrialTile01/InSW.png
+/build:World/Tiles/metal/00011111.png
 
-#begin World/IndustrialTile01/N.png
+#begin World/Tiles/metal/01000000.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -361,9 +361,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:World/IndustrialTile01/N.png
+/build:World/Tiles/metal/01000000.png
 
-#begin World/IndustrialTile01/NE.png
+#begin World/Tiles/metal/01000010.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -373,9 +373,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:World/IndustrialTile01/NE.png
+/build:World/Tiles/metal/01000010.png
 
-#begin World/IndustrialTile01/NES.png
+#begin World/Tiles/metal/01101000.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -385,9 +385,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:World/IndustrialTile01/NES.png
+/build:World/Tiles/metal/01101000.png
 
-#begin World/IndustrialTile01/NESW.png
+#begin World/Tiles/metal/01101011.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -397,9 +397,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:World/IndustrialTile01/NESW.png
+/build:World/Tiles/metal/01101011.png
 
-#begin World/IndustrialTile01/NEW.png
+#begin World/Tiles/metal/01111111.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -409,9 +409,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:World/IndustrialTile01/NEW.png
+/build:World/Tiles/metal/01111111.png
 
-#begin World/IndustrialTile01/NS.png
+#begin World/Tiles/metal/11010000.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -421,9 +421,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:World/IndustrialTile01/NS.png
+/build:World/Tiles/metal/11010000.png
 
-#begin World/IndustrialTile01/NSW.png
+#begin World/Tiles/metal/11010110.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -433,9 +433,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:World/IndustrialTile01/NSW.png
+/build:World/Tiles/metal/11010110.png
 
-#begin World/IndustrialTile01/NW.png
+#begin World/Tiles/metal/11011111.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -445,9 +445,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:World/IndustrialTile01/NW.png
+/build:World/Tiles/metal/11011111.png
 
-#begin World/IndustrialTile01/S.png
+#begin World/Tiles/metal/11111000.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -457,9 +457,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:World/IndustrialTile01/S.png
+/build:World/Tiles/metal/11111000.png
 
-#begin World/IndustrialTile01/Single.png
+#begin World/Tiles/metal/11111011.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -469,9 +469,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:World/IndustrialTile01/Single.png
+/build:World/Tiles/metal/11111011.png
 
-#begin World/IndustrialTile01/SW.png
+#begin World/Tiles/metal/11111110.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -481,9 +481,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:World/IndustrialTile01/SW.png
+/build:World/Tiles/metal/11111110.png
 
-#begin World/IndustrialTile01/W.png
+#begin World/Tiles/metal/11111111.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -493,5 +493,5 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:World/IndustrialTile01/W.png
+/build:World/Tiles/metal/11111111.png
 
