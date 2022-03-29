@@ -20,6 +20,7 @@ namespace CyberCity {
             };
             objects.Add("Player", new Player(this));
             objects.Add("Jerry", new Jerry(this));
+            objects.Add("Truck", new Truck(this, 1, 1));
         }
 
         public override void Update(GameTime gameTime) {

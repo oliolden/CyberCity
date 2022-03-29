@@ -34,9 +34,9 @@ namespace CyberCity {
 
             origin = new Vector2(animationManager.animation.frameWidth / 4, animationManager.animation.frameHeight);
             position = new Vector2(game.Window.ClientBounds.Width / 2, game.Window.ClientBounds.Height / 2);
-            topSpeed = 100.0f;
-            sprintBoost = 50.0f;
-            acceleration = 400.0f;
+            topSpeed = 200.0f;
+            sprintBoost = 10.0f;
+            acceleration = 600.0f;
             jumpStrength = 500.0f;
             hitBoxSize = new Point(16, 32); // 24, 36
             isRunning = false;

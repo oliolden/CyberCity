@@ -14,8 +14,8 @@ namespace CyberCity {
             animationManager = new AnimationManager(animations["idle"]);
             origin = new Vector2(animationManager.animation.frameWidth / 4, animationManager.animation.frameHeight);
             position = new Vector2(game.Window.ClientBounds.Width / 2, game.Window.ClientBounds.Height / 2);
-            topSpeed = 79.0f;
-            acceleration = 200.0f;
+            topSpeed = 100.0f;
+            acceleration = 300.0f;
             jumpStrength = 300.0f;
             hitBoxSize = new Point(16, 26);
             destination = position + Vector2.UnitX * random.Next(-400, 400);
