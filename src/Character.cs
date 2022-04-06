@@ -29,7 +29,7 @@ namespace CyberCity {
         }
 
         public override void Update(GameTime gameTime) {
-            PhysicsUpdate(gameTime);
+            PhysicsUpdate(gameTime, !isWalking);
             animationManager.Update(gameTime);
         }
 

@@ -11,11 +11,11 @@ namespace CyberCity {
         protected bool isStuck;
         protected Point hitBoxSize;
 
-        public PhysObject(Scene scene) : base(scene) { }
+        public PhysObject(Scene scene) : base(scene) { hitBoxSize = new Point(1, 1); }
 
-        protected void PhysicsUpdate(GameTime gameTime) {
-            //if (!isWalking) 
-            velocity.X = velocity.X * (float)Math.Pow(TileType.types[((World)scene.objects["World"]).GetTile(position.X, position.Y + 0.1f).id].friction, gameTime.ElapsedGameTime.TotalSeconds);
+        protected void PhysicsUpdate(GameTime gameTime, bool friction = true) {
+            if (friction) 
+                velocity.X = velocity.X * (float)Math.Pow(TileType.types[((World)scene.objects["World"]).GetTile(position.X, position.Y + 0.1f).id].friction, gameTime.ElapsedGameTime.TotalSeconds);
 
             if (!isGrounded) velocity.Y += 20.0f;
 

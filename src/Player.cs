@@ -22,13 +22,13 @@ namespace CyberCity {
 
         public Player(Scene scene) : base(scene) {
             animations = new Dictionary<string, Animation> {
-                { "idle", new Animation(game.textures["Cyborg\\Cyborg_idle"], 4, true) },
-                { "run", new Animation(game.textures["Cyborg\\Cyborg_run"], 6, true) },
-                { "jump", new Animation(game.textures["Cyborg\\Cyborg_jump"], 4, false) },
-                { "doublejump", new Animation(game.textures["Cyborg\\Cyborg_doublejump"], 5, false, 0.1f) },
-                { "run_attack", new Animation(game.textures["Cyborg\\Cyborg_run_attack"], 6, false) },
-                { "punch", new Animation(game.textures["Cyborg\\Cyborg_punch"], 6, false, 0.1f) },
-                { "hurt", new Animation(game.textures["Cyborg\\Cyborg_hurt"], 2, false, 0.2f) },
+                { "idle", new Animation(Game1.textures["Cyborg\\Cyborg_idle"], 4, true) },
+                { "run", new Animation(Game1.textures["Cyborg\\Cyborg_run"], 6, true) },
+                { "jump", new Animation(Game1.textures["Cyborg\\Cyborg_jump"], 4, false) },
+                { "doublejump", new Animation(Game1.textures["Cyborg\\Cyborg_doublejump"], 5, false, 0.1f) },
+                { "run_attack", new Animation(Game1.textures["Cyborg\\Cyborg_run_attack"], 6, false) },
+                { "punch", new Animation(Game1.textures["Cyborg\\Cyborg_attack1"], 6, false, 0.1f) },
+                { "hurt", new Animation(Game1.textures["Cyborg\\Cyborg_hurt"], 2, false, 0.2f) },
             };
             animationManager = new AnimationManager(animations["idle"]);
 
@@ -46,8 +46,6 @@ namespace CyberCity {
             layer = 3f;
         }
 
-        Vector2 mousePos;
-
         public override void Update(GameTime gameTime) {
             KeyboardState prevKeyboardState = keyboardState;
             MouseState prevMouseState = mouseState;
@@ -57,11 +55,11 @@ namespace CyberCity {
 
             if (mouseState.LeftButton == ButtonState.Pressed) {
                 Vector2 pos = scene.camera.mousePosition;
-                ((World)scene.objects["World"]).SetTile((int)pos.X/Tile.width, (int)pos.Y/Tile.height, true);
+                ((World)scene.objects["World"]).SetTile((int)Math.Floor(pos.X/Tile.width), (int)Math.Floor(pos.Y/Tile.height), true);
             }
             if (mouseState.RightButton == ButtonState.Pressed) {
                 Vector2 pos = scene.camera.mousePosition;
-                ((World)scene.objects["World"]).SetTile((int)pos.X/Tile.width, (int)pos.Y/Tile.height, false);
+                ((World)scene.objects["World"]).SetTile((int)Math.Floor(pos.X/Tile.width), (int)Math.Floor(pos.Y/Tile.height), false);
             }
 
             if (keyboardState.IsKeyDown(Keys.V) && prevKeyboardState.IsKeyUp(Keys.V)) {
@@ -123,7 +121,7 @@ namespace CyberCity {
                 }
 
                 // Physics
-                PhysicsUpdate(gameTime);
+                PhysicsUpdate(gameTime, !isWalking);
 
             }
 
@@ -132,7 +130,7 @@ namespace CyberCity {
                 isAttacking = true;
                 runAttack = isRunning;
             }
-            else if (isAttacking && animationManager.animation.currentFrame < 5) { }
+            else if (isAttacking && animationManager.isPlaying == true) { }
             else { isAttacking = false; }
 
             // Animations
@@ -145,7 +143,7 @@ namespace CyberCity {
                 else { PlayAnimation("idle"); }
 
                 if (isGrounded && isRunning) animationManager.animation.frameTime = Math.Abs(8f / velocity.X);
-                else if (isGrounded && isAttacking && runAttack) animationManager.animation.frameTime = 0.1f;
+                else if (isGrounded && isAttacking && runAttack) animationManager.animation.frameTime = 0.2f;
             }
 
             animationManager.Update(gameTime);
@@ -153,7 +151,13 @@ namespace CyberCity {
 
         public override void Draw(SpriteBatch batch, GameTime gameTime) {
             base.Draw(batch, gameTime);
-            if (((GameScene)scene).devTools) batch.DrawString(game.fonts["Fonts\\Minecraft"], $"XY: {Math.Floor(position.X / Tile.width)}, {Math.Floor(position.Y / Tile.height)}", scene.camera.position + (Vector2.One * 4) / scene.camera.zoom, Color.Black, 0f, Vector2.Zero, 1.5f / scene.camera.zoom, SpriteEffects.None, 1f);
+            if (((GameScene)scene).devTools) {
+                string info =
+                    $"{(int)(1 / gameTime.ElapsedGameTime.TotalSeconds)} fps\n" +
+                    $"XY: {(int)position.X}, {(int)position.Y}\n" +
+                    $"Tile: {Math.Floor(position.X / Tile.width)}, {Math.Floor(position.Y / Tile.height)}";
+                batch.DrawString(Game1.fonts["Fonts\\Minecraft"], info, scene.camera.position + (Vector2.One * 4) / scene.camera.zoom, Color.Black, 0f, Vector2.Zero, 1.5f / scene.camera.zoom, SpriteEffects.None, 1f);
+            }
         }
     }
 }

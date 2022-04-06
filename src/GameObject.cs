@@ -53,9 +53,11 @@ namespace CyberCity {
         }
 
         public void DrawHitBox(SpriteBatch batch) {
+            if (hitBox == null) return;
             Color color = collisions ? new Color(0, 0, 255, 1) : new Color(0, 255, 0, 1);
             foreach (Rectangle box in hitBox) {
-                batch.Draw(game.textures["Blank"], box, null, color, 0, Vector2.Zero, SpriteEffects.None, 999f);
+                game.DrawRectangle(batch, box, 1, color, 999f);
+                //batch.Draw(Game1.textures["Blank"], box, null, color, 0, Vector2.Zero, SpriteEffects.None, 999f);
             }
         }
 

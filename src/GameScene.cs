@@ -16,11 +16,10 @@ namespace CyberCity {
             backgroundColor = new Color(0xB3AFBB);
             objects.Add("World", new World(this));
             ((World)objects["World"]).backgrounds = new Texture2D[] {
-                game.textures["World\\Background\\0"], game.textures["World\\Background\\1"], game.textures["World\\Background\\2"], game.textures["World\\Background\\3"], game.textures["World\\Background\\4"],
+                Game1.textures["World\\Background\\0"], Game1.textures["World\\Background\\1"], Game1.textures["World\\Background\\2"], Game1.textures["World\\Background\\3"], Game1.textures["World\\Background\\4"],
             };
             objects.Add("Player", new Player(this));
-            objects.Add("Jerry", new Jerry(this));
-            objects.Add("Truck", new Truck(this, 1, 1));
+            objects.Add("Jerry" , new Jerry(this));
         }
 
         public override void Update(GameTime gameTime) {
@@ -35,6 +34,7 @@ namespace CyberCity {
             camera.zoom += ((camera.viewport.Height/240 * (float)Math.Pow(0.9, ((Player)objects["Player"]).velocity.Length()/100)) - camera.zoom) * (float)gameTime.ElapsedGameTime.TotalSeconds;
             Vector2 camDist = (objects["Player"].position + (Vector2.UnitY * -80) - camera.center);
             camera.center += camDist * 5 * (float)gameTime.ElapsedGameTime.TotalSeconds;
+
 
             base.Update(gameTime);
         }

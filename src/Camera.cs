@@ -14,6 +14,8 @@ namespace CyberCity {
         public float zoom;
         public Viewport viewport;
         public Matrix matrix;
+        public int width { get { return (int)(viewport.Width / zoom); } set { } }
+        public int height { get { return (int)(viewport.Height / zoom); } set { } }
         public Vector2 mousePosition { get { return Mouse.GetState().Position.ToVector2() / zoom + position; } set { } }
 
         public Camera(Game1 myGame) {

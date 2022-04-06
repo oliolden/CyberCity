@@ -7,16 +7,17 @@ using Microsoft.Xna.Framework.Graphics;
 namespace CyberCity {
     internal class AnimationManager {
         public Animation animation { get; private set; }
-        private bool isPlaying;
+        public bool isPlaying;
         private double _timer;
 
         public AnimationManager(Animation _animation) {
             animation = _animation;
         }
 
-        public void Play(Animation _animation) {
-            if (animation == _animation) { return; }
+        public void Play(Animation _animation = null) {
+            if (_animation == null) {_animation = animation;}
             isPlaying = true;
+            if (animation == _animation) { return; }
 
             animation = _animation;
             animation.currentFrame = 0;
@@ -34,7 +35,7 @@ namespace CyberCity {
                 if (_timer > animation.frameTime) {
                     animation.currentFrame++; if (animation.currentFrame >= animation.frameCount) {
                         if (animation.isLoop) { animation.currentFrame = 0; }
-                        else { animation.currentFrame = animation.frameCount - 1; }
+                        else { animation.currentFrame = animation.frameCount - 1; isPlaying = false; }
                     }
                     _timer = 0;
                 }

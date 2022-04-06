@@ -52,7 +52,7 @@ namespace CyberCity {
 
         public Tile GetTile(float x, float y) {
             int chunk = (int)Math.Floor(x / chunkSize.X);
-            if (!chunks.ContainsKey(chunk)) return new Tile("air");
+            if (!chunks.ContainsKey(chunk) || y < 0 || y > chunkSize.Y) return new Tile("air");
             return chunks[chunk][(int)Math.Floor(x - chunk * chunkSize.X) / Tile.width, (int)Math.Floor(y) / Tile.height];
         }
 
@@ -95,7 +95,7 @@ namespace CyberCity {
                 textureName += bit ? "1" : "0";
             }
 
-            if (game.textures.Keys.Contains($"World\\Tiles\\{chunk[x, y].id}\\{textureName}")) chunk[x, y].textureName = $"World\\Tiles\\{chunk[x, y].id}\\{textureName}";
+            if (Game1.textures.Keys.Contains($"World\\Tiles\\{chunk[x, y].id}\\{textureName}")) chunk[x, y].textureName = $"World\\Tiles\\{chunk[x, y].id}\\{textureName}";
             else chunk[x, y].textureName = $"World\\Tiles\\{chunk[x, y].id}\\00000000";
         }
 
@@ -160,7 +160,7 @@ namespace CyberCity {
                     for (int y = 0; y < chunkTileSize.Y; y++) {
                         Tile tile = chunks[i][x, y];
                         if (tile.textureName != null)
-                            batch.Draw(game.textures[tile.textureName], new Vector2((float)x * Tile.width + i * chunkSize.X, (float)y * Tile.height), null, tile.color, 0f, Vector2.Zero, Vector2.One, SpriteEffects.None, layer + 0.1f);
+                            batch.Draw(Game1.textures[tile.textureName], new Vector2((float)x * Tile.width + i * chunkSize.X, (float)y * Tile.height), null, tile.color, 0f, Vector2.Zero, Vector2.One, SpriteEffects.None, layer + 0.1f);
                     }
                 }
 

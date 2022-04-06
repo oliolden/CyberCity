@@ -12,15 +12,14 @@ namespace CyberCity {
         private SpriteBatch _spriteBatch;
         private Dictionary<string, Scene> _scenes;
         private Scene _currentScene;
-        internal Dictionary<string, Texture2D> textures;
-        internal Dictionary<string, SpriteFont> fonts;
+        internal static Dictionary<string, Texture2D> textures;
+        internal static Dictionary<string, SpriteFont> fonts;
 
         public Game1() {
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
         }
-
 
         protected override void Initialize() {
             Window.AllowUserResizing = true;
@@ -88,6 +87,13 @@ namespace CyberCity {
             _spriteBatch.End();
 
             base.Draw(gameTime);
+        }
+
+        public void DrawRectangle(SpriteBatch batch, Rectangle rectangle, int thickness, Color color, float layer) {
+            batch.Draw(textures["Blank"], new Rectangle(rectangle.X, rectangle.Y, rectangle.Width, thickness), null, color, 0, Vector2.Zero, SpriteEffects.None, layer); // Top
+            batch.Draw(textures["Blank"], new Rectangle(rectangle.X, rectangle.Y, thickness, rectangle.Height), null, color, 0, Vector2.Zero, SpriteEffects.None, layer); // Left
+            batch.Draw(textures["Blank"], new Rectangle(rectangle.X + rectangle.Width - thickness, rectangle.Y, thickness, rectangle.Height), null, color, 0, Vector2.Zero, SpriteEffects.None, layer); // Right
+            batch.Draw(textures["Blank"], new Rectangle(rectangle.X, rectangle.Y + rectangle.Height - thickness, rectangle.Width, thickness), null, color, 0, Vector2.Zero, SpriteEffects.None, layer); // Bottom
         }
     }
 }
