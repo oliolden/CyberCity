@@ -5,7 +5,7 @@ using System.Text;
 namespace CyberCity {
     internal class TileType {
         public static Dictionary<string, TileType> types = new Dictionary<string, TileType> {
-            { "air", new TileType(false, false, 0.1f) }, { "metal", new TileType(true, true, 0.001f) }
+            { "air", new TileType(false, false, 0.1f) }, { "metal", new TileType(true, true, 0.001f) }, { "stone", new TileType(true, true, 0.001f) },
         };
 
         public bool visible;
