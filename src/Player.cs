@@ -54,8 +54,8 @@ namespace CyberCity {
             MouseState prevMouseState = mouseState;
             keyboardState = Keyboard.GetState();
             mouseState = Mouse.GetState();
-            if (keyboardState.IsKeyDown(Keys.Up) && prevKeyboardState.IsKeyUp(Keys.Up)) { equippedTile++; if (equippedTile >= inventory.Length) equippedTile = 1; }
-            if (keyboardState.IsKeyDown(Keys.Down) && prevKeyboardState.IsKeyUp(Keys.Down)) { equippedTile--; if (equippedTile < 1) equippedTile = inventory.Length - 1; }
+            if (keyboardState.IsKeyDown(Keys.Up) && prevKeyboardState.IsKeyUp(Keys.Up)) { equippedTile++; if (equippedTile >= inventory.Length) equippedTile = 0; }
+            if (keyboardState.IsKeyDown(Keys.Down) && prevKeyboardState.IsKeyUp(Keys.Down)) { equippedTile--; if (equippedTile < 0) equippedTile = inventory.Length - 1; }
 
             if (mouseState.LeftButton == ButtonState.Pressed) {
                 Vector2 pos = scene.camera.mousePosition;
@@ -159,7 +159,8 @@ namespace CyberCity {
                 string info =
                     $"{(int)(1 / gameTime.ElapsedGameTime.TotalSeconds)} fps\n" +
                     $"XY: {(int)position.X}, {(int)position.Y}\n" +
-                    $"Tile: {Math.Floor(position.X / Tile.width)}, {Math.Floor(position.Y / Tile.height)}";
+                    $"Tile: {Math.Floor(position.X / Tile.width)}, {Math.Floor(position.Y / Tile.height)}\n" +
+                    $"Selected Tile: {inventory[equippedTile].id}, {(inventory[equippedTile].variant != null ? inventory[equippedTile].variant : "default")}";
                 batch.DrawString(Game1.fonts["Fonts\\Minecraft"], info, scene.camera.position + (Vector2.One * 4) / scene.camera.zoom, Color.Black, 0f, Vector2.Zero, 1.5f / scene.camera.zoom, SpriteEffects.None, 1f);
             }
         }

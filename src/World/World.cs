@@ -116,7 +116,7 @@ namespace CyberCity {
             x = x - chunk * chunkTileSize.X;
             if (!chunks.ContainsKey(chunk) || y < 0 || y >= chunkTileSize.Y) return;
             if (!chunks[chunk][x, y].Equals(tile)) {
-                chunks[chunk][x, y] = tile;
+                chunks[chunk][x, y] = new Tile(tile.id, tile.variant);
                 UpdateTileTexture(chunk, x, y);
                 foreach (Point offset in offsets) {
                     if (y + offset.Y < 0 || y + offset.Y >= chunkTileSize.Y) continue;
