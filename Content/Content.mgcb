@@ -1767,6 +1767,18 @@
 /processorParam:TextureFormat=Color
 /build:World/Tiles/stone/00000000.png
 
+#begin World/Tiles/stone/00000000.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:World/Tiles/stone/00000000.png
+
 #begin World/Tiles/stone/00001011.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -1778,6 +1790,30 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:World/Tiles/stone/00001011.png
+
+#begin World/Tiles/stone/00001011.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:World/Tiles/stone/00001011.png
+
+#begin World/Tiles/stone/00010110.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:World/Tiles/stone/00010110.png
 
 #begin World/Tiles/stone/00010110.png
 /importer:TextureImporter
@@ -1803,6 +1839,30 @@
 /processorParam:TextureFormat=Color
 /build:World/Tiles/stone/00011111.png
 
+#begin World/Tiles/stone/00011111.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:World/Tiles/stone/00011111.png
+
+#begin World/Tiles/stone/01101000.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:World/Tiles/stone/01101000.png
+
 #begin World/Tiles/stone/01101000.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -1827,7 +1887,7 @@
 /processorParam:TextureFormat=Color
 /build:World/Tiles/stone/01101011.png
 
-#begin World/Tiles/stone/01101011_1.png
+#begin World/Tiles/stone/01101011.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -1837,7 +1897,19 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:World/Tiles/stone/01101011_1.png
+/build:World/Tiles/stone/01101011.png
+
+#begin World/Tiles/stone/01111111.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:World/Tiles/stone/01111111.png
 
 #begin World/Tiles/stone/01111111.png
 /importer:TextureImporter
@@ -1863,6 +1935,18 @@
 /processorParam:TextureFormat=Color
 /build:World/Tiles/stone/11010000.png
 
+#begin World/Tiles/stone/11010000.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:World/Tiles/stone/11010000.png
+
 #begin World/Tiles/stone/11010110.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -1875,7 +1959,7 @@
 /processorParam:TextureFormat=Color
 /build:World/Tiles/stone/11010110.png
 
-#begin World/Tiles/stone/11010110_1.png
+#begin World/Tiles/stone/11010110.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -1885,7 +1969,19 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:World/Tiles/stone/11010110_1.png
+/build:World/Tiles/stone/11010110.png
+
+#begin World/Tiles/stone/11011111.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:World/Tiles/stone/11011111.png
 
 #begin World/Tiles/stone/11011111.png
 /importer:TextureImporter
@@ -1911,6 +2007,18 @@
 /processorParam:TextureFormat=Color
 /build:World/Tiles/stone/11111000.png
 
+#begin World/Tiles/stone/11111000.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:World/Tiles/stone/11111000.png
+
 #begin World/Tiles/stone/11111011.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -1922,6 +2030,30 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:World/Tiles/stone/11111011.png
+
+#begin World/Tiles/stone/11111011.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:World/Tiles/stone/11111011.png
+
+#begin World/Tiles/stone/11111110.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:World/Tiles/stone/11111110.png
 
 #begin World/Tiles/stone/11111110.png
 /importer:TextureImporter
@@ -1947,7 +2079,7 @@
 /processorParam:TextureFormat=Color
 /build:World/Tiles/stone/11111111.png
 
-#begin World/Tiles/stone/11111111_1.png
+#begin World/Tiles/stone/11111111.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -1957,7 +2089,7 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:World/Tiles/stone/11111111_1.png
+/build:World/Tiles/stone/11111111.png
 
 #begin World/Tiles/stone/grass/00001011.png
 /importer:TextureImporter
@@ -2030,6 +2162,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:World/Tiles/stone/grass/00011111.png
+
+#begin World/Tiles/stone/grass/01101011_1.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:World/Tiles/stone/grass/01101011_1.png
 
 #begin World/Tiles/stone/grass/01111111.png
 /importer:TextureImporter
@@ -2043,6 +2187,30 @@
 /processorParam:TextureFormat=Color
 /build:World/Tiles/stone/grass/01111111.png
 
+#begin World/Tiles/stone/grass/01111111.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:World/Tiles/stone/grass/01111111.png
+
+#begin World/Tiles/stone/grass/11010110_1.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:World/Tiles/stone/grass/11010110_1.png
+
 #begin World/Tiles/stone/grass/11011111.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -2054,4 +2222,28 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:World/Tiles/stone/grass/11011111.png
+
+#begin World/Tiles/stone/grass/11011111.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:World/Tiles/stone/grass/11011111.png
+
+#begin World/Tiles/stone/grass/11111111_1.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:World/Tiles/stone/grass/11111111_1.png
 
