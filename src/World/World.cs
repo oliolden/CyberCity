@@ -9,24 +9,28 @@ using Microsoft.Xna.Framework.Graphics;
 namespace CyberCity {
     internal class World : GameObject {
         public Texture2D[] backgrounds;
-        public Dictionary<int, Tile[,]> chunks;
+        public Dictionary<int, Tile[][,]> chunks;
         private static Point chunkTileSize = new Point(32, 32);
         private static Point chunkSize = new Point(chunkTileSize.X * Tile.width, chunkTileSize.Y * Tile.height);
         private static Point[] offsets = { new Point(-1, -1), new Point(0, -1), new Point(1, -1), new Point(-1, 0), new Point(1, 0), new Point(-1, 1), new Point(0, 1), new Point(1, 1), };
         Random random;
         private int currentChunk { get { return (int)Math.Floor(scene.camera.center.X / chunkSize.X); } set { } }
 
-        public World(Scene myScene, int seed = 0) : base(myScene) { random = new Random(seed); chunks = new Dictionary<int, Tile[,]>(); GenerateChunks(-3, 3); layer = 0f; }
+        public World(Scene myScene, int seed = 0) : base(myScene) { random = new Random(seed); chunks = new Dictionary<int, Tile[][,]>(); GenerateChunks(-3, 3); layer = 0f; }
 
         public void GenerateChunks(int start, int end) {
             bool hasGenerated = false;
             for (int i = start; i <= end; i++) {
                 if (chunks.ContainsKey(i)) continue;
-                Tile[,] chunk = new Tile[chunkTileSize.X, chunkTileSize.Y];
+                Tile[][,] chunk = new Tile[2][,] { new Tile[chunkTileSize.X, chunkTileSize.Y], new Tile[chunkTileSize.X, chunkTileSize.Y] };
                 for (int x = 0; x < chunkTileSize.X; x++) {
                     for (int y = 0; y < chunkTileSize.Y; y++) {
-                        if (y >= 16) { chunk[x, y] = new Tile("stone", "grass"); }
-                        else chunk[x, y] = new Tile("air");
+                        if (y >= 18) { ChunkSetTile(ref chunk, x, y, new Tile("stone")); }
+                        else if (y >= 16) { ChunkSetTile(ref chunk, x, y, new Tile("stone", "grass")); }
+                        else ChunkSetTile(ref chunk, x, y, new Tile("air"));
+
+                        if (y >= 16) ChunkSetTile(ref chunk, x, y, new Tile("stonewall"));
+                        else ChunkSetTile(ref chunk, x, y, new Tile("airwall"));
                     }
                 }
                 chunks[i] = chunk;
@@ -50,14 +54,20 @@ namespace CyberCity {
             }
         }
 
+        private void ChunkSetTile(ref Tile[][,] chunk, int x, int y, Tile tile) {
+            chunk[tile.GetTileType().background ? 0 : 1][x, y] = tile;
+            if (tile.GetTileType().visible && Game1.textures.ContainsKey($"World\\Tiles\\{tile.GetPath()}\\texture"))
+                chunk[tile.GetTileType().background ? 0 : 1][x, y].textureName = $"World\\Tiles\\{tile.GetPath()}\\texture";
+        }
+
         public Tile GetTile(float x, float y) {
             int chunk = (int)Math.Floor(x / chunkSize.X);
             if (!chunks.ContainsKey(chunk) || y < 0 || y > chunkSize.Y) return new Tile("air");
-            return chunks[chunk][(int)Math.Floor(x - chunk * chunkSize.X) / Tile.width, (int)Math.Floor(y) / Tile.height];
+            return chunks[chunk][1][(int)Math.Floor(x - chunk * chunkSize.X) / Tile.width, (int)Math.Floor(y) / Tile.height];
         }
 
         public void UpdateTileTexture(int chunkIndex, int x, int y) {
-            Tile[,] chunk = chunks[chunkIndex];
+            Tile[,] chunk = chunks[chunkIndex][1];
             Tile tile = chunk[x, y];
             if (!TileType.types[tile.id].visible) { tile.textureName = null; return; }
             bool[] check = { false, false, false, false, false, false, false, false, };
@@ -68,7 +78,7 @@ namespace CyberCity {
                 if (x + offset.X >= 0 && x + offset.X < chunkTileSize.X) return chunk[x + offset.X, y + offset.Y].id == tile.id;
                 else {
                     int testChunk = chunkIndex + (int)Math.Floor((x + offset.X) / (float)chunkTileSize.X);
-                    if (chunks.ContainsKey(testChunk)) { return chunks[testChunk][(x + offset.X) > 0 ? (x + offset.X) - chunkTileSize.X : chunkTileSize.X + (x + offset.X), y + offset.Y].id == tile.id; }
+                    if (chunks.ContainsKey(testChunk)) { return chunks[testChunk][1][(x + offset.X) > 0 ? (x + offset.X) - chunkTileSize.X : chunkTileSize.X + (x + offset.X), y + offset.Y].id == tile.id; }
                     else return false;
                 }
             }
@@ -81,33 +91,44 @@ namespace CyberCity {
 
             bools = check;
 
+            // Corner is false if one adjecent side is false
             if (!check[1] || !check[3]) bools[0] = false;
             if (!check[1] || !check[4]) bools[2] = false;
             if (!check[3] || !check[6]) bools[5] = false;
             if (!check[4] || !check[6]) bools[7] = false;
 
-            if (!check[0] && !check[2]) bools[1] = false;
-            if (!check[0] && !check[5]) bools[3] = false;
-            if (!check[2] && !check[7]) bools[4] = false;
-            if (!check[5] && !check[7]) bools[6] = false;
 
+            // If full corner connection exists then side is false if both adjecent corners are false
+            if ((check[0] && check[1] && check[3]) ||
+                (check[1] && check[2] && check[4]) ||
+                (check[3] && check[5] && check[6]) ||
+                (check[4] && check[6] && check[7])) {
+                if (!check[0] && !check[2]) bools[1] = false;
+                if (!check[0] && !check[5]) bools[3] = false;
+                if (!check[2] && !check[7]) bools[4] = false;
+                if (!check[5] && !check[7]) bools[6] = false;
+            }
+
+            // Convert to string
             foreach (bool bit in bools) {
                 textureName += bit ? "1" : "0";
             }
 
-            if (bools[1] && !CheckTile(new Point(0, -2))) {
-                if (tile.variant != null && Game1.textures.Keys.Contains($"World\\Tiles\\{tile.id}\\{tile.variant}\\{textureName}_1")) {
-                    textureName += "_1";
-                }
-                else if (Game1.textures.Keys.Contains($"World\\Tiles\\{tile.id}\\{textureName}_1")) textureName += "_1";
-            }
-
-            if (tile.variant != null && Game1.textures.Keys.Contains($"World\\Tiles\\{tile.id}\\{tile.variant}\\{textureName}")) {
-                chunk[x, y].textureName = $"World\\Tiles\\{tile.id}\\{tile.variant}\\{textureName}";
+            if (bools[1] && Game1.textures.ContainsKey($"World\\Tiles\\{chunk[x, y - 1].GetPath()}\\{textureName}_1") && !CheckTile(new Point(0, -2))) {
+                chunk[x, y].textureName = $"World\\Tiles\\{chunk[x, y - 1].GetPath()}\\{textureName}_1";
             }
             else {
-                if (Game1.textures.Keys.Contains($"World\\Tiles\\{tile.id}\\{textureName}")) chunk[x, y].textureName = $"World\\Tiles\\{tile.id}\\{textureName}";
-                else chunk[x, y].textureName = $"World\\Tiles\\{tile.id}\\00000000";
+                if (Game1.textures.Keys.Contains($"World\\Tiles\\{tile.GetPath()}\\{textureName}")) {
+                    chunk[x, y].textureName = $"World\\Tiles\\{tile.GetPath()}\\{textureName}";
+                }
+                else {
+                    if (Game1.textures.Keys.Contains($"World\\Tiles\\{tile.id}\\{textureName}"))
+                        chunk[x, y].textureName = $"World\\Tiles\\{tile.id}\\{textureName}";
+                    else if (Game1.textures.Keys.Contains($"World\\Tiles\\{tile.GetPath()}\\00000000"))
+                        chunk[x, y].textureName = $"World\\Tiles\\{tile.GetPath()}\\00000000";
+                    else
+                        chunk[x, y].textureName = $"World\\Tiles\\{tile.id}\\00000000";
+                }
             }
         }
 
@@ -115,8 +136,17 @@ namespace CyberCity {
             int chunk = (int)Math.Floor(x / (float)chunkTileSize.X);
             x = x - chunk * chunkTileSize.X;
             if (!chunks.ContainsKey(chunk) || y < 0 || y >= chunkTileSize.Y) return;
-            if (!chunks[chunk][x, y].Equals(tile)) {
-                chunks[chunk][x, y] = new Tile(tile.id, tile.variant);
+            if (tile.GetTileType().background) {
+                if (!chunks[chunk][0][x, y].Equals(tile)) {
+                    chunks[chunk][0][x, y] = new Tile(tile.id, tile.variant);
+                    if (tile.GetTileType().visible && Game1.textures.ContainsKey($"World\\Tiles\\{tile.GetPath()}\\texture"))
+                        chunks[chunk][0][x, y].textureName = $"World\\Tiles\\{tile.GetPath()}\\texture";
+
+                }
+            }
+            else
+                if (!chunks[chunk][1][x, y].Equals(tile)) {
+                chunks[chunk][1][x, y] = new Tile(tile.id, tile.variant);
                 UpdateTileTexture(chunk, x, y);
                 foreach (Point offset in offsets) {
                     if (y + offset.Y < 0 || y + offset.Y >= chunkTileSize.Y) continue;
@@ -138,10 +168,10 @@ namespace CyberCity {
 
         public void UpdateHitBox() {
             hitBox = new List<Rectangle>();
-            foreach (KeyValuePair<int, Tile[,]> chunk in chunks) {
+            foreach (KeyValuePair<int, Tile[][,]> chunk in chunks) {
                 for (int x = 0; x < chunkTileSize.X; x++) {
                     for (int y = 0; y < chunkTileSize.Y; y++) {
-                        if (TileType.types[chunk.Value[x, y].id].collideable) {
+                        if (chunk.Value[1][x, y].id != "air") {
                             hitBox.Add(new Rectangle(x * Tile.width + chunk.Key * chunkSize.X, y * Tile.height, Tile.width, Tile.height));
                         }
                     }
@@ -171,12 +201,16 @@ namespace CyberCity {
                 if (!chunks.ContainsKey(i)) continue;
                 for (int x = 0; x < chunkTileSize.X; x++) {
                     for (int y = 0; y < chunkTileSize.Y; y++) {
-                        Tile tile = chunks[i][x, y];
+                        // Background
+                        Tile tile = chunks[i][0][x, y];
                         if (tile.textureName != null)
                             batch.Draw(Game1.textures[tile.textureName], new Vector2((float)x * Tile.width + i * chunkSize.X, (float)y * Tile.height), null, tile.color, 0f, Vector2.Zero, Vector2.One, SpriteEffects.None, layer + 0.1f);
+                        // Foreground
+                        tile = chunks[i][1][x, y];
+                        if (tile.textureName != null)
+                            batch.Draw(Game1.textures[tile.textureName], new Vector2((float)x * Tile.width + i * chunkSize.X, (float)y * Tile.height), null, tile.color, 0f, Vector2.Zero, Vector2.One, SpriteEffects.None, layer + 0.2f);
                     }
                 }
-
             }
             base.Draw(batch, gameTime);
         }

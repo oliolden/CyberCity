@@ -13,6 +13,9 @@ namespace CyberCity {
         public string textureName;
         public Color color;
 
+        public string GetPath() { return id + (variant != null ? "\\" + variant : ""); }
+        public TileType GetTileType() { return TileType.types[id]; }
+
         public Tile(string _id, string _variant = null) {
             id = _id;
             variant = _variant;

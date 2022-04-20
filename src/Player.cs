@@ -21,11 +21,11 @@ namespace CyberCity {
         private MouseState mouseState;
 
         int equippedTile;
-        Tile[] inventory = { new Tile("metal"), new Tile("stone"), new Tile("stone", "grass") };
+        Tile[] inventory = { new Tile("metal"), new Tile("metalwall"), new Tile("stone"), new Tile("stone", "grass"), new Tile("stonewall") };
 
         public Player(Scene scene) : base(scene) {
             animations = new Dictionary<string, Animation> {
-                { "idle", new Animation(Game1.textures["Cyborg\\Cyborg_idle"], 4, true) },
+                { "idle", new Animation(Game1.textures["Cyborg\\Cyborg_idle"], 4, true, 0.3f) },
                 { "run", new Animation(Game1.textures["Cyborg\\Cyborg_run"], 6, true) },
                 { "jump", new Animation(Game1.textures["Cyborg\\Cyborg_jump"], 4, false) },
                 { "doublejump", new Animation(Game1.textures["Cyborg\\Cyborg_doublejump"], 5, false, 0.1f) },
@@ -37,8 +37,8 @@ namespace CyberCity {
 
             origin = new Vector2(animationManager.animation.frameWidth / 4, animationManager.animation.frameHeight);
             position = new Vector2(game.Window.ClientBounds.Width / 2, game.Window.ClientBounds.Height / 2);
-            topSpeed = 200.0f;
-            sprintBoost = 10.0f;
+            topSpeed = 100.0f;
+            sprintBoost = 100.0f;
             acceleration = 600.0f;
             jumpStrength = 500.0f;
             hitBoxSize = new Point(16, 32); // 24, 36
@@ -146,7 +146,7 @@ namespace CyberCity {
                 else if (isRunning) PlayAnimation("run");
                 else { PlayAnimation("idle"); }
 
-                if (isGrounded && isRunning) animationManager.animation.frameTime = Math.Abs(8f / velocity.X);
+                if (isGrounded && isRunning) animationManager.animation.frameTime = Math.Abs(10f / velocity.X);
                 else if (isGrounded && isAttacking && runAttack) animationManager.animation.frameTime = 0.2f;
             }
 
