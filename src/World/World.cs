@@ -74,12 +74,16 @@ namespace CyberCity {
             bool[] bools;
 
             bool CheckTile(Point offset) {
-                if (y + offset.Y < 0 || y + offset.Y >= chunkTileSize.Y) return false;
-                if (x + offset.X >= 0 && x + offset.X < chunkTileSize.X) return chunk[x + offset.X, y + offset.Y].id == tile.id;
+                return CheckTileInfo(offset).id == tile.id;
+            }
+
+            Tile CheckTileInfo(Point offset) {
+                if (y + offset.Y < 0 || y + offset.Y >= chunkTileSize.Y) return new Tile("air");
+                if (x + offset.X >= 0 && x + offset.X < chunkTileSize.X) return chunk[x + offset.X, y + offset.Y];
                 else {
                     int testChunk = chunkIndex + (int)Math.Floor((x + offset.X) / (float)chunkTileSize.X);
-                    if (chunks.ContainsKey(testChunk)) { return chunks[testChunk][1][(x + offset.X) > 0 ? (x + offset.X) - chunkTileSize.X : chunkTileSize.X + (x + offset.X), y + offset.Y].id == tile.id; }
-                    else return false;
+                    if (chunks.ContainsKey(testChunk)) { return chunks[testChunk][1][(x + offset.X) > 0 ? (x + offset.X) - chunkTileSize.X : chunkTileSize.X + (x + offset.X), y + offset.Y]; }
+                    else return new Tile("air");
                 }
             }
 
@@ -116,6 +120,12 @@ namespace CyberCity {
 
             if (bools[1] && Game1.textures.ContainsKey($"World\\Tiles\\{chunk[x, y - 1].GetPath()}\\{textureName}_1") && !CheckTile(new Point(0, -2))) {
                 chunk[x, y].textureName = $"World\\Tiles\\{chunk[x, y - 1].GetPath()}\\{textureName}_1";
+            }
+            else if (bools[3] && CheckTileInfo(offsets[3]).variant != tile.variant && Game1.textures.ContainsKey($"World\\Tiles\\{CheckTileInfo(offsets[3]).GetPath()}\\{textureName}_R")) {
+                chunk[x, y].textureName = $"World\\Tiles\\{CheckTileInfo(offsets[3]).GetPath()}\\{textureName}_R";
+            }
+            else if (bools[4] && CheckTileInfo(offsets[4]).variant != tile.variant && Game1.textures.ContainsKey($"World\\Tiles\\{CheckTileInfo(offsets[4]).GetPath()}\\{textureName}_L")) {
+                chunk[x, y].textureName = $"World\\Tiles\\{CheckTileInfo(offsets[4]).GetPath()}\\{textureName}_L";
             }
             else {
                 if (Game1.textures.Keys.Contains($"World\\Tiles\\{tile.GetPath()}\\{textureName}")) {
