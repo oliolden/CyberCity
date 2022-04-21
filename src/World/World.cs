@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Linq;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace CyberCity {
@@ -151,7 +149,6 @@ namespace CyberCity {
                     chunks[chunk][0][x, y] = new Tile(tile.id, tile.variant);
                     if (tile.GetTileType().visible && Game1.textures.ContainsKey($"World\\Tiles\\{tile.GetPath()}\\texture"))
                         chunks[chunk][0][x, y].textureName = $"World\\Tiles\\{tile.GetPath()}\\texture";
-
                 }
             }
             else

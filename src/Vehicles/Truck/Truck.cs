@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -12,7 +11,7 @@ namespace CyberCity {
         };
         private AnimationManager chassiManagerFront;
         private AnimationManager chassiManagerBack;
-        private bool hasTrailer, isOpen;
+        private bool hasTrailer;
         private int body, chassi, chassiCount, trailer;
         private List<KeyValuePair<Vector2, string>> decor;
         public Truck(Scene scene, int body, int chassi) : base(scene) {
@@ -21,7 +20,6 @@ namespace CyberCity {
             chassiManagerFront = new AnimationManager(chassis[this.chassi - 1].front);
             chassiManagerBack = new AnimationManager(chassis[this.chassi - 1].back);
             hasTrailer = false;
-            isOpen = false;
             collisions = false;
             chassiCount = 2;
             decor = new List<KeyValuePair<Vector2, string>>();

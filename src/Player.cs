@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -63,7 +62,10 @@ namespace CyberCity {
             }
             if (mouseState.RightButton == ButtonState.Pressed) {
                 Vector2 pos = scene.camera.mousePosition;
-                ((World)scene.objects["World"]).SetTile((int)Math.Floor(pos.X/Tile.width), (int)Math.Floor(pos.Y/Tile.height), new Tile("air"));
+                if (keyboardState.IsKeyDown(Keys.LeftControl))
+                    ((World)scene.objects["World"]).SetTile((int)Math.Floor(pos.X/Tile.width), (int)Math.Floor(pos.Y/Tile.height), new Tile("airwall"));
+                else
+                    ((World)scene.objects["World"]).SetTile((int)Math.Floor(pos.X/Tile.width), (int)Math.Floor(pos.Y/Tile.height), new Tile("air"));
             }
 
             if (keyboardState.IsKeyDown(Keys.V) && prevKeyboardState.IsKeyUp(Keys.V)) {
