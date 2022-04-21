@@ -14,7 +14,7 @@ namespace CyberCity {
 
         protected void PhysicsUpdate(GameTime gameTime, bool friction = true) {
             if (friction) 
-                velocity.X = velocity.X * (float)Math.Pow(TileType.types[((World)scene.objects["World"]).GetTile(position.X, position.Y + 0.1f).id].friction, gameTime.ElapsedGameTime.TotalSeconds);
+                velocity.X = velocity.X * (float)Math.Pow(TileType.types[((World)scene.objects["World"]).GetTile(position.X, position.Y + 0.1f, false).id].friction, gameTime.ElapsedGameTime.TotalSeconds);
 
             if (!isGrounded) velocity.Y += 20.0f;
 

@@ -4,8 +4,8 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace CyberCity {
     internal abstract class GameObject {
-        protected Game1 game;
-        protected Scene scene;
+        internal Game1 game;
+        internal Scene scene;
         public Vector2 position;
         public float rotation;
         public Vector2 scale;
