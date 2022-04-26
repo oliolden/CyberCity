@@ -9,7 +9,11 @@ namespace CyberCity {
         public Tile[,] front;
         public Tile[,] back;
         public List<GameObject> objects;
-        //string biome;
+        string biome;
+        private static Dictionary<string, Biome> biomes = new Dictionary<string, Biome> {
+            { "industrialZone", new Biome(new Dictionary<int, Tile> { { 16, new Tile("metal") } }, new Dictionary<int, Tile> { { 16, new Tile("metalwall") } }) },
+            { "greenZone", new Biome(new Dictionary<int, Tile> { { 16, new Tile("stone", "grass") }, { 17, new Tile("stone") } }, new Dictionary<int, Tile> { { 16, new Tile("stonewall") } }) },
+        };
 
         public Chunk(World world) {
             this.world = world;
@@ -28,17 +32,20 @@ namespace CyberCity {
 
         public void Generate(int seed) {
             Random random = new Random(seed);
+            biome = biomes.ElementAt(random.Next(biomes.Count())).Key;
             for (int x = 0; x < front.GetLength(0); x++) {
                 for (int y = 0; y < front.GetLength(1); y++) {
-                    if (y >= 18) SetTile(x, y, new Tile("stone"));
-                    else if (y >= 16) SetTile(x, y, new Tile("stone", "grass"));
-                    else SetTile(x, y, new Tile("air"));
-
-                    if (y >= 16) SetTile(x, y, new Tile("stonewall"));
-                    else SetTile(x, y, new Tile("airwall"));
+                    int front = biomes[biome].front.Keys.Aggregate(0, (a, next) => next < y && next > a ? next : a);
+                    if (front == 0) SetTile(x, y, new Tile("air"));
+                    else SetTile(x, y, biomes[biome].front[front].Copy());
+                    int back = biomes[biome].back.Keys.Aggregate(0, (a, next) => next < y && next > a ? next : a);
+                    if (back == 0) SetTile(x, y, new Tile("airwall"));
+                    else SetTile(x, y, biomes[biome].back[back].Copy());
                 }
             }
 
         }
+
+
     }
 }

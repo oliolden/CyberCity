@@ -133,7 +133,7 @@ namespace CyberCity {
             if (!chunks.ContainsKey(chunk) || y < 0 || y >= chunkTileSize.Y) return;
             if (tile.GetTileType().background) {
                 if (!chunks[chunk].back[x, y].Equals(tile)) {
-                    chunks[chunk].back[x, y] = new Tile(tile.id, tile.variant);
+                    chunks[chunk].back[x, y] = tile.Copy();
                     if (tile.GetTileType().visible && Game1.textures.ContainsKey($"World\\Tiles\\{tile.GetPath()}\\texture"))
                         chunks[chunk].back[x, y].textureName = $"World\\Tiles\\{tile.GetPath()}\\texture";
                 }

@@ -27,5 +27,9 @@ namespace CyberCity {
         public override int GetHashCode() {
             return base.GetHashCode();
         }
+
+        public Tile Copy() {
+            return new Tile(id, variant);
+        }
     }
 }
