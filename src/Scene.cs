@@ -22,7 +22,7 @@ namespace CyberCity {
             camera.Update(gameTime);
         }
 
-        public void Draw(SpriteBatch batch, GameTime gameTime) {
+        public virtual void Draw(SpriteBatch batch, GameTime gameTime) {
             foreach (GameObject obj in objects.Values) {
                 if (obj.enabled)
                     obj.Draw(batch, gameTime);

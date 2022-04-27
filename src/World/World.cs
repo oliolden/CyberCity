@@ -10,6 +10,7 @@ namespace CyberCity {
         internal static Point chunkTileSize = new Point(32, 32);
         internal static Point chunkSize = new Point(chunkTileSize.X * Tile.width, chunkTileSize.Y * Tile.height);
         private static Point[] offsets = { new Point(-1, -1), new Point(0, -1), new Point(1, -1), new Point(-1, 0), new Point(1, 0), new Point(-1, 1), new Point(0, 1), new Point(1, 1), };
+        private ParallaxBackground background;
         int seed;
         Random random;
         private readonly string texturePath = "World\\Tiles\\";
@@ -17,7 +18,14 @@ namespace CyberCity {
         private int GetChunkId() { return (int)Math.Floor(scene.camera.center.X / chunkSize.X); }
         private string GetBiomeId() { return chunks[GetChunkId()].biome; }
 
-        public World(Scene myScene, int seed = 0) : base(myScene) { this.seed = seed; random = new Random(seed); chunks = new Dictionary<int, Chunk>(); GenerateChunks(-3, 3); layer = 0f; }
+        public World(Scene myScene, int seed = 0) : base(myScene) {
+            this.seed = seed;
+            random = new Random(seed);
+            chunks = new Dictionary<int, Chunk>();
+            GenerateChunks(-3, 3);
+            layer = 0f;
+            background = new ParallaxBackground(scene.camera);
+        }
 
         public void GenerateChunks(int start, int end) {
             bool hasGenerated = false;
@@ -54,7 +62,7 @@ namespace CyberCity {
         public void UpdateTileTexture(int chunkIndex, int x, int y) {
             Tile[,] chunk = chunks[chunkIndex].tiles;
             Tile tile = chunk[x, y];
-            if (!TileType.types[tile.id].visible) { tile.textureName = null; return; }
+            if (!TileType.types[tile.id].visible) { tile.texture = null; return; }
             bool[] check = { false, false, false, false, false, false, false, false, };
             bool[] bools;
 
@@ -104,25 +112,25 @@ namespace CyberCity {
             }
 
             if (bools[1] && Game1.textures.ContainsKey(texturePath + chunk[x, y - 1].GetPath() + textureName + "_1") && !CheckTile(new Point(0, -2))) {
-                chunk[x, y].textureName = chunk[x, y - 1].GetPath() + textureName + "_1";
+                chunk[x, y].texture = Game1.textures[texturePath + chunk[x, y - 1].GetPath() + textureName + "_1"];
             }
             else if (bools[3] && CheckTileInfo(offsets[3]).variant != tile.variant && Game1.textures.ContainsKey(texturePath + CheckTileInfo(offsets[4]).GetPath() + textureName + "_R")) {
-                chunk[x, y].textureName = CheckTileInfo(offsets[4]).GetPath() + textureName + "_R";
+                chunk[x, y].texture = Game1.textures[texturePath + CheckTileInfo(offsets[4]).GetPath() + textureName + "_R"];
             }
             else if (bools[4] && CheckTileInfo(offsets[4]).variant != tile.variant && Game1.textures.ContainsKey(texturePath + CheckTileInfo(offsets[4]).GetPath() + textureName + "_L")) {
-                chunk[x, y].textureName = CheckTileInfo(offsets[4]).GetPath() + textureName + "_L";
+                chunk[x, y].texture = Game1.textures[texturePath + CheckTileInfo(offsets[4]).GetPath() + textureName + "_L"];
             }
             else {
                 if (Game1.textures.Keys.Contains(texturePath + tile.GetPath() + textureName)) {
-                    chunk[x, y].textureName = tile.GetPath() + textureName;
+                    chunk[x, y].texture = Game1.textures[texturePath + tile.GetPath() + textureName];
                 }
                 else {
                     if (Game1.textures.Keys.Contains(texturePath + tile.id + textureName))
-                        chunk[x, y].textureName = tile.id + textureName;
+                        chunk[x, y].texture = Game1.textures[texturePath + tile.id + textureName];
                     else if (Game1.textures.Keys.Contains(texturePath + tile.GetPath() + "\\00000000"))
-                        chunk[x, y].textureName = tile.GetPath() + "\\00000000";
+                        chunk[x, y].texture = Game1.textures[texturePath + tile.GetPath() + "\\00000000"];
                     else
-                        chunk[x, y].textureName = tile.id + "\\00000000";
+                        chunk[x, y].texture = Game1.textures[texturePath + tile.id + "\\00000000"];
                 }
             }
         }
@@ -168,21 +176,7 @@ namespace CyberCity {
 
         public override void Draw(SpriteBatch batch, GameTime gameTime) {
             // Draw backgrounds
-            float scale = 1.5f;
-            float parallaxStrength = 1;
-            float bgLayer = layer - 1;
-            foreach (string background in Biome.all[GetBiomeId()].backgrounds) {
-                Texture2D texture = Game1.textures[Biome.texturePath + background];
-                float width = texture.Width * scale;
-                float offset = -scene.camera.center.X * (1 - parallaxStrength);
-                Vector2 pos = new Vector2(scene.camera.center.X - offset + width * (float)Math.Floor(offset / width), scene.camera.center.Y);
-                for (int i = -1; i <= 0; i++) {
-                    Vector2 drawPos = new Vector2(pos.X - i * width, pos.Y);
-                    batch.Draw(texture, drawPos, null, Color.White, 0f, new Vector2(texture.Width / 2, texture.Height / 2), scale, SpriteEffects.None, bgLayer);
-                }
-                parallaxStrength += 0.2f;
-                bgLayer += 0.1f;
-            }
+            background.Draw(batch, Biome.all[GetBiomeId()].background);
 
             // Draw chunks
             int currentChunk = GetChunkId();
@@ -194,8 +188,8 @@ namespace CyberCity {
                         Tile tile = chunks[i].tiles[x, y];
                         if (tile.background != null)
                             batch.Draw(Game1.textures[texturePath + "background\\" + tile.background], new Vector2((float)x * Tile.width + i * chunkSize.X, (float)y * Tile.height), null, tile.color, 0f, Vector2.Zero, Vector2.One, SpriteEffects.None, layer + 0.1f);
-                        if (tile.textureName != null)
-                            batch.Draw(Game1.textures[texturePath + tile.textureName], new Vector2((float)x * Tile.width + i * chunkSize.X, (float)y * Tile.height), null, tile.color, 0f, Vector2.Zero, Vector2.One, SpriteEffects.None, layer + 0.2f);
+                        if (tile.texture != null)
+                            batch.Draw(tile.texture, new Vector2((float)x * Tile.width + i * chunkSize.X, (float)y * Tile.height), null, tile.color, 0f, Vector2.Zero, Vector2.One, SpriteEffects.None, layer + 0.2f);
                     }
                 }
             }

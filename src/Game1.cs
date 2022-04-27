@@ -29,10 +29,15 @@ namespace CyberCity {
 
             scenes = new Dictionary<string, Scene>();
             scenes.Add("mainMenu", new Scene(this));
-            scenes["mainMenu"].objects.Add("playButton", new MenuButton(scenes["mainMenu"], () => { currentScene = scenes["game"]; }, "Play", "World\\Tiles\\metal\\00000000"));
+            scenes["mainMenu"].objects.Add(
+                "playButton", new MenuButton(scenes["mainMenu"],
+                () => { currentScene = scenes["game"]; }, "Play", "World\\Tiles\\metal\\00000000")
+                { scale = Vector2.One * 2}
+            );
+            scenes["mainMenu"].objects.Add("background", new ParallaxBackgroundObject(scenes["mainMenu"], "industrialZone", 2f));
             scenes["mainMenu"].camera.CenterOn(scenes["mainMenu"].objects["playButton"]);
 
-            scenes.Add("game", new GameScene(this));
+            scenes.Add("game", new Scene(this));
             scenes["game"].objects = new Dictionary<string, GameObject> {
                 { "World", new World(scenes["game"]) },
                 { "Player", new Player(scenes["game"]) },
@@ -54,6 +59,13 @@ namespace CyberCity {
                 string directory = path.Substring(17);
                 if (directory != "bin" && directory != "obj") {
                     LoadContentAtPath(path);
+                }
+            }
+            foreach (string id in textures.Keys) {
+                if (id.StartsWith("World\\Background\\")) {
+                    string backgroundId = id.Substring("World\\Background\\".Length).Split('\\')[0];
+                    if (!ParallaxBackground.backgrounds.ContainsKey(backgroundId)) ParallaxBackground.backgrounds.Add(backgroundId, new List<Texture2D>());
+                    ParallaxBackground.backgrounds[backgroundId].Add(textures[id]);
                 }
             }
         }

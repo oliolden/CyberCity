@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace CyberCity {
     internal class Tile {
@@ -6,7 +7,7 @@ namespace CyberCity {
 
         public string id;
         public string variant;
-        public string textureName;
+        public Texture2D texture;
         public string background;
         public Color color;
 
