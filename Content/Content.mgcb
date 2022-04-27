@@ -1515,6 +1515,30 @@
 /processorParam:TextureFormat=Color
 /build:World/Background/4.png
 
+#begin World/Tiles/background/metal.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:World/Tiles/background/metal.png
+
+#begin World/Tiles/background/stone.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:World/Tiles/background/stone.png
+
 #begin World/Tiles/metal/00000000.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -1754,18 +1778,6 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:World/Tiles/metal/11111111.png
-
-#begin World/Tiles/metalwall/texture.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:World/Tiles/metalwall/texture.png
 
 #begin World/Tiles/stone/00000000.png
 /importer:TextureImporter
@@ -2186,16 +2198,4 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:World/Tiles/stone/grass/11111111_1.png
-
-#begin World/Tiles/stonewall/texture.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:World/Tiles/stonewall/texture.png
 

@@ -6,41 +6,42 @@ namespace CyberCity {
     internal class Chunk {
         internal Game1 game;
         internal World world;
-        public Tile[,] front;
-        public Tile[,] back;
+        public Tile[,] tiles;
         public List<GameObject> objects;
         string biome;
-        private static Dictionary<string, Biome> biomes = new Dictionary<string, Biome> {
-            { "industrialZone", new Biome(new Dictionary<int, Tile> { { 16, new Tile("metal") } }, new Dictionary<int, Tile> { { 16, new Tile("metalwall") } }) },
-            { "greenZone", new Biome(new Dictionary<int, Tile> { { 16, new Tile("stone", "grass") }, { 17, new Tile("stone") } }, new Dictionary<int, Tile> { { 16, new Tile("stonewall") } }) },
+        private static Dictionary<string, Dictionary<int, Tile>> biomes = new Dictionary<string, Dictionary<int, Tile>> {
+            { "industrialZone", new Dictionary<int, Tile> { { 16, new Tile("metal", null, "metal") } } },
+            { "greenZone", new Dictionary<int, Tile> { { 16, new Tile("stone", "grass", "stone") }, { 17, new Tile("stone", null, "stone") } } },
         };
 
         public Chunk(World world) {
             this.world = world;
             game = world.game;
-            front = new Tile[World.chunkTileSize.X, World.chunkTileSize.Y];
-            back = new Tile[World.chunkTileSize.X, World.chunkTileSize.Y];
+            tiles = new Tile[World.chunkTileSize.X, World.chunkTileSize.Y];
         }
 
         private void SetTile(int x, int y, Tile tile) {
-            TileType type = tile.GetTileType();
-            if (type.background) back[x, y] = tile;
-            else front[x, y] = tile;
-            if (type.visible && type.background && Game1.textures.ContainsKey($"World\\Tiles\\{tile.GetPath()}\\texture"))
-                tile.textureName = $"World\\Tiles\\{tile.GetPath()}\\texture";
+            tiles[x, y] = tile.Copy();
+        }
+
+        private void SetBackground(int x, int y, string background) {
+            tiles[x, y].background = background;
+        }
+        private void SetId(int x, int y, string id) {
+            tiles[x, y].id = id;
+        }
+        private void SetVariant(int x, int y, string variant) {
+            tiles[x, y].variant = variant;
         }
 
         public void Generate(int seed) {
             Random random = new Random(seed);
             biome = biomes.ElementAt(random.Next(biomes.Count())).Key;
-            for (int x = 0; x < front.GetLength(0); x++) {
-                for (int y = 0; y < front.GetLength(1); y++) {
-                    int front = biomes[biome].front.Keys.Aggregate(0, (a, next) => next < y && next > a ? next : a);
-                    if (front == 0) SetTile(x, y, new Tile("air"));
-                    else SetTile(x, y, biomes[biome].front[front].Copy());
-                    int back = biomes[biome].back.Keys.Aggregate(0, (a, next) => next < y && next > a ? next : a);
-                    if (back == 0) SetTile(x, y, new Tile("airwall"));
-                    else SetTile(x, y, biomes[biome].back[back].Copy());
+            for (int x = 0; x < tiles.GetLength(0); x++) {
+                for (int y = 0; y < tiles.GetLength(1); y++) {
+                    int key = biomes[biome].Keys.Aggregate(0, (a, next) => next < y && next > a ? next : a);
+                    if (key == 0) SetTile(x, y, new Tile("air"));
+                    else SetTile(x, y, biomes[biome][key].Copy());
                 }
             }
 

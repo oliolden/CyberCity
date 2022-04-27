@@ -7,14 +7,16 @@ namespace CyberCity {
         public string id;
         public string variant;
         public string textureName;
+        public string background;
         public Color color;
 
-        public string GetPath() { return id + (variant != null ? "\\" + variant : ""); }
+        public string GetPath() { return id + (variant != null ? "\\" + variant : "") + "\\"; }
         public TileType GetTileType() { return TileType.types[id]; }
 
-        public Tile(string _id, string _variant = null) {
-            id = _id;
-            variant = _variant;
+        public Tile(string id, string variant = null, string background = null) {
+            this.id = id;
+            this.variant = variant;
+            this.background = background;
             color = Color.White;
         }
 
@@ -29,7 +31,7 @@ namespace CyberCity {
         }
 
         public Tile Copy() {
-            return new Tile(id, variant);
+            return new Tile(id, variant, background);
         }
     }
 }

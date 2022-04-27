@@ -20,7 +20,7 @@ namespace CyberCity {
         private MouseState mouseState;
 
         int equippedTile;
-        Tile[] inventory = { new Tile("metal"), new Tile("metalwall"), new Tile("stone"), new Tile("stone", "grass"), new Tile("stonewall") };
+        Tile[] inventory = { new Tile("metal"), new Tile("stone"), new Tile("stone", "grass"), };
 
         public Player(Scene scene) : base(scene) {
             animations = new Dictionary<string, Animation> {
@@ -62,10 +62,7 @@ namespace CyberCity {
             }
             if (mouseState.RightButton == ButtonState.Pressed) {
                 Vector2 pos = scene.camera.mousePosition;
-                if (keyboardState.IsKeyDown(Keys.LeftControl))
-                    ((World)scene.objects["World"]).SetTile((int)Math.Floor(pos.X/Tile.width), (int)Math.Floor(pos.Y/Tile.height), new Tile("airwall"));
-                else
-                    ((World)scene.objects["World"]).SetTile((int)Math.Floor(pos.X/Tile.width), (int)Math.Floor(pos.Y/Tile.height), new Tile("air"));
+                ((World)scene.objects["World"]).SetTile((int)Math.Floor(pos.X/Tile.width), (int)Math.Floor(pos.Y/Tile.height), new Tile("air"));
             }
 
             if (keyboardState.IsKeyDown(Keys.V) && prevKeyboardState.IsKeyUp(Keys.V)) {
