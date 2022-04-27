@@ -172,17 +172,17 @@ namespace CyberCity {
             float scale = 1.4f;
             float parallaxStrength = 1;
             float bgLayer = layer - 1;
-            foreach (Texture2D background in backgrounds) {
-                float width = background.Width * scale;
-                float offset = -scene.camera.center.X * (1 - parallaxStrength);
-                Vector2 pos = new Vector2(scene.camera.center.X - offset + width * (float)Math.Floor(offset / width), scene.camera.center.Y);
-                for (int i = -1; i <= 0; i++) {
-                    Vector2 drawPos = new Vector2(pos.X - i * width, pos.Y);
-                    batch.Draw(background, drawPos, null, Color.White, 0f, new Vector2(background.Width / 2, background.Height / 2), scale, SpriteEffects.None, bgLayer);
-                }
-                parallaxStrength += 0.2f;
-                bgLayer += 0.1f;
-            }
+            //foreach (Texture2D background in backgrounds) {
+            //    float width = background.Width * scale;
+            //    float offset = -scene.camera.center.X * (1 - parallaxStrength);
+            //    Vector2 pos = new Vector2(scene.camera.center.X - offset + width * (float)Math.Floor(offset / width), scene.camera.center.Y);
+            //    for (int i = -1; i <= 0; i++) {
+            //        Vector2 drawPos = new Vector2(pos.X - i * width, pos.Y);
+            //        batch.Draw(background, drawPos, null, Color.White, 0f, new Vector2(background.Width / 2, background.Height / 2), scale, SpriteEffects.None, bgLayer);
+            //    }
+            //    parallaxStrength += 0.2f;
+            //    bgLayer += 0.1f;
+            //}
 
             // Draw chunks
             int currentChunk = GetCurrentChunk();

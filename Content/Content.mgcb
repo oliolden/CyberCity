@@ -1455,7 +1455,7 @@
 /processorParam:TextureFormat=Color
 /build:Vehicles/Truck/Trailers/5_2.png
 
-#begin World/Background/0.png
+#begin World/Background/industrialZone/0.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -1465,9 +1465,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:World/Background/0.png
+/build:World/Background/industrialZone/0.png
 
-#begin World/Background/1.png
+#begin World/Background/industrialZone/1.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -1477,9 +1477,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:World/Background/1.png
+/build:World/Background/industrialZone/1.png
 
-#begin World/Background/2.png
+#begin World/Background/industrialZone/2.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -1489,9 +1489,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:World/Background/2.png
+/build:World/Background/industrialZone/2.png
 
-#begin World/Background/3.png
+#begin World/Background/industrialZone/3.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -1501,9 +1501,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:World/Background/3.png
+/build:World/Background/industrialZone/3.png
 
-#begin World/Background/4.png
+#begin World/Background/industrialZone/4.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -1513,7 +1513,7 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:World/Background/4.png
+/build:World/Background/industrialZone/4.png
 
 #begin World/Tiles/background/metal.png
 /importer:TextureImporter

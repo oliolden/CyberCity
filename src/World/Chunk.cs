@@ -9,9 +9,21 @@ namespace CyberCity {
         public Tile[,] tiles;
         public List<GameObject> objects;
         string biome;
-        private static Dictionary<string, Dictionary<int, Tile>> biomes = new Dictionary<string, Dictionary<int, Tile>> {
-            { "industrialZone", new Dictionary<int, Tile> { { 16, new Tile("metal", null, "metal") } } },
-            { "greenZone", new Dictionary<int, Tile> { { 16, new Tile("stone", "grass", "stone") }, { 17, new Tile("stone", null, "stone") } } },
+        //private static Dictionary<string, Dictionary<int, Tile>> biomes = new Dictionary<string, Dictionary<int, Tile>> {
+        //    { "industrialZone", new Dictionary<int, Tile> { { 16, new Tile("metal", null, "metal") } } },
+        //    { "greenZone", new Dictionary<int, Tile> { { 16, new Tile("stone", "grass", "stone") }, { 17, new Tile("stone", null, "stone") } } },
+        //};
+        private static Dictionary<string, Biome> biomes = new Dictionary<string, Biome> {
+            { "industrialZone", new Biome(
+                new Dictionary<int, Tile> { { 16, new Tile("metal", null, "metal") } },
+                new string[] { }
+                ) 
+            },
+            { "greenZone", new Biome(
+                new Dictionary<int, Tile> { { 16, new Tile("stone", "grass", "stone") }, { 17, new Tile("stone", null, "stone") } },
+                new string[] { }
+                )
+            },
         };
 
         public Chunk(World world) {
@@ -39,9 +51,9 @@ namespace CyberCity {
             biome = biomes.ElementAt(random.Next(biomes.Count())).Key;
             for (int x = 0; x < tiles.GetLength(0); x++) {
                 for (int y = 0; y < tiles.GetLength(1); y++) {
-                    int key = biomes[biome].Keys.Aggregate(0, (a, next) => next < y && next > a ? next : a);
+                    int key = biomes[biome].tiles.Keys.Aggregate(0, (a, next) => next < y && next > a ? next : a);
                     if (key == 0) SetTile(x, y, new Tile("air"));
-                    else SetTile(x, y, biomes[biome][key].Copy());
+                    else SetTile(x, y, biomes[biome].tiles[key].Copy());
                 }
             }
 

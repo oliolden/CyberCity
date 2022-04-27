@@ -14,6 +14,7 @@ namespace CyberCity {
         public int width { get { return (int)(viewport.Width / zoom); } set { } }
         public int height { get { return (int)(viewport.Height / zoom); } set { } }
         public Vector2 mousePosition { get { return Mouse.GetState().Position.ToVector2() / zoom + position; } set { } }
+        private GameObject centerObject;
 
         public Camera(Game1 myGame) {
             game = myGame;
@@ -23,7 +24,14 @@ namespace CyberCity {
             zoom = 1;
         }
 
-        public void Update() {
+        public void CenterOn(GameObject gameObject) {
+            centerObject = gameObject;
+        }
+
+        public void Update(GameTime gameTime) {
+            if (centerObject != null) {
+                center += (centerObject.position + (Vector2.UnitY * -80) - center) * 5 * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            }
             viewport = game.GraphicsDevice.Viewport;
             matrix = Matrix.CreateTranslation(-center.X, -center.Y, 0) * Matrix.CreateRotationZ(rotation) * Matrix.CreateScale(zoom, zoom, 0) * Matrix.CreateTranslation(viewport.Width / 2, viewport.Height / 2, 0);
         }

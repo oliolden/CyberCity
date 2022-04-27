@@ -19,7 +19,7 @@ namespace CyberCity {
                 if (obj.enabled)
                     obj.Update(gameTime);
             }
-            camera.Update();
+            camera.Update(gameTime);
         }
 
         public void Draw(SpriteBatch batch, GameTime gameTime) {

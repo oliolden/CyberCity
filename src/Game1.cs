@@ -7,8 +7,8 @@ namespace CyberCity {
     public class Game1 : Game {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
-        private Dictionary<string, Scene> _scenes;
-        private Scene _currentScene;
+        private Dictionary<string, Scene> scenes;
+        private Scene currentScene;
         internal static Dictionary<string, Texture2D> textures;
         internal static Dictionary<string, SpriteFont> fonts;
 
@@ -23,11 +23,16 @@ namespace CyberCity {
             base.Initialize();
             // TODO: Add your initialization logic here
 
-            _scenes = new Dictionary<string, Scene> {
-                { "mainMenu", new Scene(this) },
-                { "game", new GameScene(this) },
+            scenes = new Dictionary<string, Scene>();
+            scenes.Add("mainMenu", new Scene(this));
+            scenes.Add("game", new GameScene(this));
+            scenes["game"].objects = new Dictionary<string, GameObject> {
+                { "World", new World(scenes["game"]) },
+                { "Player", new Player(scenes["game"]) },
+                { "Jerry", new Jerry(scenes["game"]) },
             };
-            _currentScene = _scenes["game"];
+            scenes["game"].camera.CenterOn(scenes["game"].objects["Player"]);
+            currentScene = scenes["game"];
         }
 
         protected override void LoadContent() {
@@ -70,17 +75,17 @@ namespace CyberCity {
 
         protected override void Update(GameTime gameTime) {
             // TODO: Add your update logic here
-            _currentScene.Update(gameTime);
+            currentScene.Update(gameTime);
             
             base.Update(gameTime);
         }
 
         protected override void Draw(GameTime gameTime) {
-            GraphicsDevice.Clear(_currentScene.backgroundColor);
+            GraphicsDevice.Clear(currentScene.backgroundColor);
 
             // TODO: Add your drawing code here
-            _spriteBatch.Begin(SpriteSortMode.FrontToBack, BlendState.AlphaBlend, SamplerState.PointClamp, null, null, null, _currentScene.camera.matrix);
-            _currentScene.Draw(_spriteBatch, gameTime);
+            _spriteBatch.Begin(SpriteSortMode.FrontToBack, BlendState.AlphaBlend, SamplerState.PointClamp, null, null, null, currentScene.camera.matrix);
+            currentScene.Draw(_spriteBatch, gameTime);
             _spriteBatch.End();
 
             base.Draw(gameTime);
