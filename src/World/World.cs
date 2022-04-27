@@ -6,7 +6,6 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace CyberCity {
     internal class World : GameObject {
-        public Texture2D[] backgrounds;
         public Dictionary<int, Chunk> chunks;
         internal static Point chunkTileSize = new Point(32, 32);
         internal static Point chunkSize = new Point(chunkTileSize.X * Tile.width, chunkTileSize.Y * Tile.height);
@@ -15,8 +14,8 @@ namespace CyberCity {
         Random random;
         private readonly string texturePath = "World\\Tiles\\";
 
-        private int GetCurrentChunk() { return (int)Math.Floor(scene.camera.center.X / chunkSize.X); }
-
+        private int GetChunkId() { return (int)Math.Floor(scene.camera.center.X / chunkSize.X); }
+        private string GetBiomeId() { return chunks[GetChunkId()].biome; }
 
         public World(Scene myScene, int seed = 0) : base(myScene) { this.seed = seed; random = new Random(seed); chunks = new Dictionary<int, Chunk>(); GenerateChunks(-3, 3); layer = 0f; }
 
@@ -150,7 +149,7 @@ namespace CyberCity {
         }
 
         public override void Update(GameTime gameTime) {
-            int currentChunk = GetCurrentChunk();
+            int currentChunk = GetChunkId();
             GenerateChunks(currentChunk - 2, currentChunk + 2);
         }
 
@@ -169,23 +168,24 @@ namespace CyberCity {
 
         public override void Draw(SpriteBatch batch, GameTime gameTime) {
             // Draw backgrounds
-            float scale = 1.4f;
+            float scale = 1.5f;
             float parallaxStrength = 1;
             float bgLayer = layer - 1;
-            //foreach (Texture2D background in backgrounds) {
-            //    float width = background.Width * scale;
-            //    float offset = -scene.camera.center.X * (1 - parallaxStrength);
-            //    Vector2 pos = new Vector2(scene.camera.center.X - offset + width * (float)Math.Floor(offset / width), scene.camera.center.Y);
-            //    for (int i = -1; i <= 0; i++) {
-            //        Vector2 drawPos = new Vector2(pos.X - i * width, pos.Y);
-            //        batch.Draw(background, drawPos, null, Color.White, 0f, new Vector2(background.Width / 2, background.Height / 2), scale, SpriteEffects.None, bgLayer);
-            //    }
-            //    parallaxStrength += 0.2f;
-            //    bgLayer += 0.1f;
-            //}
+            foreach (string background in Biome.all[GetBiomeId()].backgrounds) {
+                Texture2D texture = Game1.textures[Biome.texturePath + background];
+                float width = texture.Width * scale;
+                float offset = -scene.camera.center.X * (1 - parallaxStrength);
+                Vector2 pos = new Vector2(scene.camera.center.X - offset + width * (float)Math.Floor(offset / width), scene.camera.center.Y);
+                for (int i = -1; i <= 0; i++) {
+                    Vector2 drawPos = new Vector2(pos.X - i * width, pos.Y);
+                    batch.Draw(texture, drawPos, null, Color.White, 0f, new Vector2(texture.Width / 2, texture.Height / 2), scale, SpriteEffects.None, bgLayer);
+                }
+                parallaxStrength += 0.2f;
+                bgLayer += 0.1f;
+            }
 
             // Draw chunks
-            int currentChunk = GetCurrentChunk();
+            int currentChunk = GetChunkId();
             for (int i = currentChunk - 1; i <= currentChunk + 1; i++) {
                 if (!chunks.ContainsKey(i)) continue;
                 for (int x = 0; x < chunkTileSize.X; x++) {

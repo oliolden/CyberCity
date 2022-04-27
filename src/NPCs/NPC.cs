@@ -21,7 +21,7 @@ namespace CyberCity {
                 else if (isGrounded) destination = position;
             }
             isWalking = false;
-            if (destination == null || Math.Abs(scene.objects["Player"].position.X - position.X) > scene.camera.width / 2 + 20) return;
+            if (destination == null || Math.Abs(scene.objects["Player"].position.X - position.X) > scene.camera.GetWidth() / 2 + 20) return;
             if (destination.X > position.X + 5) { Walk(gameTime, false, topSpeed); }
             else if (destination.X < position.X - 5) { Walk(gameTime, true, topSpeed); }
             if (!isWalking) { if (random.Next(200) == 0) NewDestination(); }

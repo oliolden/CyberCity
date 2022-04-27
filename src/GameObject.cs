@@ -17,8 +17,8 @@ namespace CyberCity {
         public bool collisions;
         public float layer;
 
-        public GameObject(Scene myScene) {
-            scene = myScene;
+        public GameObject(Scene scene) {
+            this.scene = scene;
             game = scene.game;
             position = Vector2.Zero;
             rotation = 0f;
@@ -60,6 +60,6 @@ namespace CyberCity {
         }
 
         public virtual void Update(GameTime gameTime) { }
-        public virtual void Draw(SpriteBatch batch, GameTime gameTime) { if (((GameScene)scene).devTools) DrawHitBox(batch); }
+        public virtual void Draw(SpriteBatch batch, GameTime gameTime) { if (game.devTools) DrawHitBox(batch); }
     }
 }

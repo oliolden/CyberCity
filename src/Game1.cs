@@ -1,7 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
 using System.IO;
+using System.Diagnostics;
 
 namespace CyberCity {
     public class Game1 : Game {
@@ -11,6 +13,8 @@ namespace CyberCity {
         private Scene currentScene;
         internal static Dictionary<string, Texture2D> textures;
         internal static Dictionary<string, SpriteFont> fonts;
+        internal bool devTools;
+        private KeyboardState keyboardState;
 
         public Game1() {
             _graphics = new GraphicsDeviceManager(this);
@@ -25,6 +29,9 @@ namespace CyberCity {
 
             scenes = new Dictionary<string, Scene>();
             scenes.Add("mainMenu", new Scene(this));
+            scenes["mainMenu"].objects.Add("playButton", new MenuButton(scenes["mainMenu"], () => { currentScene = scenes["game"]; }, "Play", "World\\Tiles\\metal\\00000000"));
+            scenes["mainMenu"].camera.CenterOn(scenes["mainMenu"].objects["playButton"]);
+
             scenes.Add("game", new GameScene(this));
             scenes["game"].objects = new Dictionary<string, GameObject> {
                 { "World", new World(scenes["game"]) },
@@ -32,7 +39,7 @@ namespace CyberCity {
                 { "Jerry", new Jerry(scenes["game"]) },
             };
             scenes["game"].camera.CenterOn(scenes["game"].objects["Player"]);
-            currentScene = scenes["game"];
+            currentScene = scenes["mainMenu"];
         }
 
         protected override void LoadContent() {
@@ -75,6 +82,17 @@ namespace CyberCity {
 
         protected override void Update(GameTime gameTime) {
             // TODO: Add your update logic here
+            KeyboardState prevKeyboardState = keyboardState;
+            keyboardState = Keyboard.GetState();
+
+            if (keyboardState.IsKeyDown(Keys.F3) && prevKeyboardState.IsKeyUp(Keys.F3)) {
+                devTools = !devTools;
+            }
+
+            if (keyboardState.IsKeyDown(Keys.Escape) && prevKeyboardState.IsKeyUp(Keys.Escape)) {
+                currentScene = scenes["mainMenu"];
+            }
+
             currentScene.Update(gameTime);
             
             base.Update(gameTime);

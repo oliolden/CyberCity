@@ -57,11 +57,11 @@ namespace CyberCity {
             if (keyboardState.IsKeyDown(Keys.Down) && prevKeyboardState.IsKeyUp(Keys.Down)) { equippedTile--; if (equippedTile < 0) equippedTile = inventory.Length - 1; }
 
             if (mouseState.LeftButton == ButtonState.Pressed) {
-                Vector2 pos = scene.camera.mousePosition;
+                Vector2 pos = scene.camera.GetMousePos();
                 ((World)scene.objects["World"]).SetTile((int)Math.Floor(pos.X/Tile.width), (int)Math.Floor(pos.Y/Tile.height), inventory[equippedTile]);
             }
             if (mouseState.RightButton == ButtonState.Pressed) {
-                Vector2 pos = scene.camera.mousePosition;
+                Vector2 pos = scene.camera.GetMousePos();
                 ((World)scene.objects["World"]).SetTile((int)Math.Floor(pos.X/Tile.width), (int)Math.Floor(pos.Y/Tile.height), new Tile("air"));
             }
 
@@ -154,13 +154,13 @@ namespace CyberCity {
 
         public override void Draw(SpriteBatch batch, GameTime gameTime) {
             base.Draw(batch, gameTime);
-            if (((GameScene)scene).devTools) {
+            if (game.devTools) {
                 string info =
                     $"{(int)(1 / gameTime.ElapsedGameTime.TotalSeconds)} fps\n" +
                     $"XY: {(int)position.X}, {(int)position.Y}\n" +
                     $"Tile: {Math.Floor(position.X / Tile.width)}, {Math.Floor(position.Y / Tile.height)}\n" +
                     $"Selected Tile: {inventory[equippedTile].id}, {(inventory[equippedTile].variant != null ? inventory[equippedTile].variant : "default")}";
-                batch.DrawString(Game1.fonts["Fonts\\Minecraft"], info, scene.camera.position + (Vector2.One * 4) / scene.camera.zoom, Color.Black, 0f, Vector2.Zero, 1.5f / scene.camera.zoom, SpriteEffects.None, 1f);
+                batch.DrawString(Game1.fonts["Fonts\\Minecraft"], info, scene.camera.GetPosition() + (Vector2.One * 4) / scene.camera.zoom, Color.Black, 0f, Vector2.Zero, 1.5f / scene.camera.zoom, SpriteEffects.None, 1f);
             }
         }
     }
