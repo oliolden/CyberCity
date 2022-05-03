@@ -9,11 +9,11 @@ namespace CyberCity {
         public Dictionary<int, Chunk> chunks;
         internal static Point chunkTileSize = new Point(32, 32);
         internal static Point chunkSize = new Point(chunkTileSize.X * Tile.width, chunkTileSize.Y * Tile.height);
-        private static Point[] offsets = { new Point(-1, -1), new Point(0, -1), new Point(1, -1), new Point(-1, 0), new Point(1, 0), new Point(-1, 1), new Point(0, 1), new Point(1, 1), };
+        public static Point[] offsets = { new Point(-1, -1), new Point(0, -1), new Point(1, -1), new Point(-1, 0), new Point(1, 0), new Point(-1, 1), new Point(0, 1), new Point(1, 1), };
         private ParallaxBackground background;
         int seed;
         Random random;
-        private readonly string texturePath = "World\\Tiles\\";
+        public static readonly string texturePath = "World\\Tiles\\";
 
         private int GetChunkId() { return (int)Math.Floor(scene.camera.center.X / chunkSize.X); }
         private string GetBiomeId() { return chunks[GetChunkId()].biome; }

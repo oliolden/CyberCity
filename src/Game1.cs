@@ -32,10 +32,15 @@ namespace CyberCity {
             scenes["mainMenu"].objects.Add(
                 "playButton", new MenuButton(scenes["mainMenu"],
                 () => { currentScene = scenes["game"]; }, "Play", "World\\Tiles\\metal\\00000000")
-                { scale = Vector2.One * 2}
+                { scale = new Vector2(3, 3) }
+            );
+            scenes["mainMenu"].objects.Add(
+                "editorButton", new MenuButton(scenes["mainMenu"],
+                () => { currentScene = scenes["editor"]; }, "Editor", "World\\Tiles\\metal\\00000000")
+                { scale = new Vector2(3, 3), position = new Vector2(0, 150) }
             );
             scenes["mainMenu"].objects.Add("background", new ParallaxBackgroundObject(scenes["mainMenu"], "industrialZone", 2f));
-            scenes["mainMenu"].camera.CenterOn(scenes["mainMenu"].objects["playButton"]);
+            scenes["mainMenu"].camera.CenterOn(scenes["mainMenu"].objects["playButton"], Vector2.Zero);
 
             scenes.Add("game", new Scene(this));
             scenes["game"].objects = new Dictionary<string, GameObject> {
@@ -43,7 +48,14 @@ namespace CyberCity {
                 { "Player", new Player(scenes["game"]) },
                 { "Jerry", new Jerry(scenes["game"]) },
             };
-            scenes["game"].camera.CenterOn(scenes["game"].objects["Player"]);
+            scenes["game"].camera.CenterOn(scenes["game"].objects["Player"], new Vector2(0, -120));
+
+            scenes.Add("editor", new Scene(this));
+            scenes["editor"].objects.Add(
+                "editor", new Editor(scenes["editor"])
+            );
+            scenes["editor"].camera.CenterOn(scenes["editor"].objects["editor"], new Vector2(0, 0));
+
             currentScene = scenes["mainMenu"];
         }
 

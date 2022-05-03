@@ -9,7 +9,7 @@ namespace CyberCity {
         Camera camera;
         public ParallaxBackground(Camera camera) { this.camera = camera; }
         public void Draw(SpriteBatch batch, string backgroundId) {
-            float scale = 1.5f;
+            float scale = 480f / backgrounds[backgroundId][0].Height;
             float parallaxStrength = 1;
             float bgLayer = -5f;
             foreach (Texture2D background in backgrounds[backgroundId]) {
@@ -25,7 +25,7 @@ namespace CyberCity {
             }
         }
         public void Draw(SpriteBatch batch, string backgroundId, Vector2 position) {
-            float scale = 1.5f;
+            float scale = 480f / backgrounds[backgroundId][0].Height;
             float parallaxStrength = 1;
             float bgLayer = -5f;
             foreach (Texture2D background in backgrounds[backgroundId]) {

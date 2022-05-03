@@ -11,8 +11,9 @@ namespace CyberCity {
         public float zoom;
         public Viewport viewport;
         public Matrix matrix;
-        private float windowScale;
+        public float windowScale;
         private GameObject centerObject;
+        private Vector2 offset;
         public Vector2 GetPosition() { return new Vector2(-matrix.Translation.X, -matrix.Translation.Y) / zoom / windowScale; }
         public int GetWidth() { return (int)(viewport.Width / zoom); }
         public int GetHeight() { return (int)(viewport.Height / zoom); }
@@ -26,13 +27,14 @@ namespace CyberCity {
             zoom = 1;
         }
 
-        public void CenterOn(GameObject gameObject) {
+        public void CenterOn(GameObject gameObject, Vector2 offset) {
             centerObject = gameObject;
+            this.offset = offset;
         }
 
         public void Update(GameTime gameTime) {
             if (centerObject != null) {
-                center += (centerObject.position + (Vector2.UnitY * -80) - center) * 5 * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                center += (centerObject.position + offset - center) * 5 * (float)gameTime.ElapsedGameTime.TotalSeconds;
             }
             windowScale = MathF.Max(viewport.Width / 800f, viewport.Height / 480f);
             viewport = game.GraphicsDevice.Viewport;

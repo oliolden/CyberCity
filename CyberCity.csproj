@@ -30,6 +30,5 @@
   <ItemGroup>
     <Folder Include="Content\NPCs\Jerry\" />
     <Folder Include="Content\Vehicles\Truck\Decor\Paints\" />
-    <Folder Include="src\Editor\" />
   </ItemGroup>
 </Project>
