@@ -44,6 +44,12 @@ namespace CyberCity {
                 position.Y += speed * dt;
             if (keyboardState.IsKeyDown(Keys.D))
                 position.X += speed * dt;
+            if (keyboardState.IsKeyDown(Keys.LeftControl)) {
+                if (keyboardState.IsKeyDown(Keys.S))
+                    structure.Save("test");
+                if (keyboardState.IsKeyDown(Keys.L))
+                    structure = Structure.Load("test");
+            }
         }
 
         public override void Draw(SpriteBatch batch, GameTime gameTime) {

@@ -5,10 +5,10 @@ namespace CyberCity {
     internal class Tile {
         public static int width = 32, height = 32;
 
-        public string id;
-        public string variant;
+        public string id { get; set; }
+        public string variant { get; set; }
         public Texture2D texture;
-        public string background;
+        public string background { get; set; }
         public Color color;
 
         public string GetPath() { return id + (variant != null ? "\\" + variant : "") + "\\"; }
