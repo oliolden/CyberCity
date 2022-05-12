@@ -8,7 +8,8 @@ namespace CyberCity {
     internal class Structure {
         public int width { get; set; }
         public int height { get; set; }
-        public Tile[,] tiles { get; set; }
+        public Tile[,] tiles;
+        public Tile[][] saveTiles { get; set; }
         public List<GameObject> objects;
 
         public Structure(int width, int height) {
@@ -22,13 +23,22 @@ namespace CyberCity {
             }
         }
 
+        public Structure() { }
+
         public void Save(string name) {
+            saveTiles = tiles.ToJaggedArray();
             Debug.WriteLine(JsonSerializer.Serialize(this));
             File.WriteAllText($"..\\..\\..\\Content\\World\\Structures\\{name}.struct", JsonSerializer.Serialize(this));
         }
 
+        private void LoadTiles() {
+            tiles = saveTiles.To2DArray();
+        }
+
         public static Structure Load(string name) {
-            return JsonSerializer.Deserialize<Structure>(File.ReadAllText($"..\\..\\..\\Content\\World\\Structures\\{name}.struct"));
+            Structure structure = JsonSerializer.Deserialize<Structure>(File.ReadAllText($"..\\..\\..\\Content\\World\\Structures\\{name}.struct"));
+            structure.LoadTiles();
+            return structure;
         }
     }
 }

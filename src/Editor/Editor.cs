@@ -36,19 +36,27 @@ namespace CyberCity {
 
             float speed = 100f;
 
-            if (keyboardState.IsKeyDown(Keys.W))
-                position.Y -= speed * dt;
-            if (keyboardState.IsKeyDown(Keys.A))
-                position.X -= speed * dt;
-            if (keyboardState.IsKeyDown(Keys.S))
-                position.Y += speed * dt;
-            if (keyboardState.IsKeyDown(Keys.D))
-                position.X += speed * dt;
             if (keyboardState.IsKeyDown(Keys.LeftControl)) {
                 if (keyboardState.IsKeyDown(Keys.S))
                     structure.Save("test");
-                if (keyboardState.IsKeyDown(Keys.L))
+                if (keyboardState.IsKeyDown(Keys.L)) {
                     structure = Structure.Load("test");
+                    for (int x = 0; x < structure.width; x++) {
+                        for (int y = 0; y < structure.height; y++) {
+                            UpdateTileTexture(x, y);
+                        }
+                    }
+                }
+            }
+            else {
+                if (keyboardState.IsKeyDown(Keys.W))
+                    position.Y -= speed * dt;
+                if (keyboardState.IsKeyDown(Keys.A))
+                    position.X -= speed * dt;
+                if (keyboardState.IsKeyDown(Keys.S))
+                    position.Y += speed * dt;
+                if (keyboardState.IsKeyDown(Keys.D))
+                    position.X += speed * dt;
             }
         }
 
