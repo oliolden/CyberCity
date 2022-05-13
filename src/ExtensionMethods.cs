@@ -5,6 +5,7 @@ using System.Text;
 namespace CyberCity {
     internal static class ExtensionMethods {
         public static T[][] ToJaggedArray<T>(this T[,] input) {
+            if (input == null) return null;
             int width = input.GetLength(0);
             int height = input.GetLength(1);
             T[][] returnArray = new T[width][];
@@ -18,6 +19,7 @@ namespace CyberCity {
         }
 
         public static T[,] To2DArray<T>(this T[][] input) {
+            if (input == null) return null;
             int width = input.Length;
             int height = input[0].Length;
             T[,] returnArray = new T[width, height];
