@@ -44,17 +44,5 @@ namespace CyberCity {
         public Tile Copy() {
             return new Tile(id, variant, background);
         }
-
-        public class TileJsonConverter : JsonConverter<Tile> {
-            public override Tile Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) {
-                return new Tile(reader.GetString(), reader.GetString(), reader.GetString());
-            }
-
-            public override void Write(Utf8JsonWriter writer, Tile value, JsonSerializerOptions options) {
-                writer.WriteStringValue(value.id);
-                writer.WriteStringValue(value.variant);
-                writer.WriteStringValue(value.background);
-            }
-        }
     }
 }

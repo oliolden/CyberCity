@@ -6,10 +6,10 @@ using System.IO;
 using System.Diagnostics;
 
 namespace CyberCity {
-    public class Game1 : Game {
+    internal class Game1 : Game {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
-        private Dictionary<string, Scene> scenes;
+        public Dictionary<string, Scene> scenes;
         private Scene currentScene;
         internal static Dictionary<string, Texture2D> textures;
         internal static Dictionary<string, SpriteFont> fonts;
@@ -115,6 +115,10 @@ namespace CyberCity {
 
             if (keyboardState.IsKeyDown(Keys.Escape) && prevKeyboardState.IsKeyUp(Keys.Escape)) {
                 currentScene = scenes["mainMenu"];
+                Save.SaveGame(this, "game");
+            }
+            if (keyboardState.IsKeyDown(Keys.M) && prevKeyboardState.IsKeyUp(Keys.M)) {
+                Save.LoadGame(this, "game");
             }
 
             currentScene.Update(gameTime);

@@ -12,9 +12,11 @@ namespace CyberCity {
         private Structure structure;
 
         int equippedTile;
+        int bgEquippedTile;
         Tile[] inventory = { new Tile("metal"), new Tile("stone"), new Tile("stone", "grass"), };
+        string[] bgInventory = { "metal", "stone", };
 
-        public Editor(Scene scene) : base(scene) { structure = new Structure(5, 5); }
+        public Editor(Scene scene) : base(scene) { structure = new Structure(10, 17); }
 
         public override void Update(GameTime gameTime) {
             float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
@@ -22,25 +24,41 @@ namespace CyberCity {
             MouseState prevMouseState = mouseState;
             keyboardState = Keyboard.GetState();
             mouseState = Mouse.GetState();
-            if (keyboardState.IsKeyDown(Keys.Up) && prevKeyboardState.IsKeyUp(Keys.Up)) { equippedTile++; if (equippedTile >= inventory.Length) equippedTile = 0; }
-            if (keyboardState.IsKeyDown(Keys.Down) && prevKeyboardState.IsKeyUp(Keys.Down)) { equippedTile--; if (equippedTile < 0) equippedTile = inventory.Length - 1; }
+            if (keyboardState.IsKeyDown(Keys.LeftShift)) {
+                if (keyboardState.IsKeyDown(Keys.Up) && prevKeyboardState.IsKeyUp(Keys.Up)) { bgEquippedTile++; if (bgEquippedTile >= bgInventory.Length) bgEquippedTile = 0; }
+                if (keyboardState.IsKeyDown(Keys.Down) && prevKeyboardState.IsKeyUp(Keys.Down)) { bgEquippedTile--; if (bgEquippedTile < 0) bgEquippedTile = bgInventory.Length - 1; }
 
-            if (mouseState.LeftButton == ButtonState.Pressed) {
-                Vector2 pos = scene.camera.GetMousePos();
-                SetTile((int)Math.Floor(pos.X / Tile.width), (int)Math.Floor(pos.Y / Tile.height), inventory[equippedTile]);
+                if (mouseState.LeftButton == ButtonState.Pressed) {
+                    Vector2 pos = scene.camera.GetMousePos();
+                    SetBackground((int)Math.Floor(pos.X / Tile.width), (int)Math.Floor(pos.Y / Tile.height), bgInventory[bgEquippedTile]);
+                }
+                if (mouseState.RightButton == ButtonState.Pressed) {
+                    Vector2 pos = scene.camera.GetMousePos();
+                    SetBackground((int)Math.Floor(pos.X / Tile.width), (int)Math.Floor(pos.Y / Tile.height), null);
+                }
+
             }
-            if (mouseState.RightButton == ButtonState.Pressed) {
-                Vector2 pos = scene.camera.GetMousePos();
-                SetTile((int)Math.Floor(pos.X / Tile.width), (int)Math.Floor(pos.Y / Tile.height), new Tile("air"));
+            else {
+                if (keyboardState.IsKeyDown(Keys.Up) && prevKeyboardState.IsKeyUp(Keys.Up)) { equippedTile++; if (equippedTile >= inventory.Length) equippedTile = 0; }
+                if (keyboardState.IsKeyDown(Keys.Down) && prevKeyboardState.IsKeyUp(Keys.Down)) { equippedTile--; if (equippedTile < 0) equippedTile = inventory.Length - 1; }
+
+                if (mouseState.LeftButton == ButtonState.Pressed) {
+                    Vector2 pos = scene.camera.GetMousePos();
+                    SetTile((int)Math.Floor(pos.X / Tile.width), (int)Math.Floor(pos.Y / Tile.height), inventory[equippedTile]);
+                }
+                if (mouseState.RightButton == ButtonState.Pressed) {
+                    Vector2 pos = scene.camera.GetMousePos();
+                    SetTile((int)Math.Floor(pos.X / Tile.width), (int)Math.Floor(pos.Y / Tile.height), new Tile("air"));
+                }
             }
 
             float speed = 100f;
 
             if (keyboardState.IsKeyDown(Keys.LeftControl)) {
                 if (keyboardState.IsKeyDown(Keys.S))
-                    structure.Save("test");
+                    structure.Save("testbuild");
                 if (keyboardState.IsKeyDown(Keys.L)) {
-                    structure = Structure.Load("test");
+                    structure = Structure.Load("testbuild");
                     for (int x = 0; x < structure.width; x++) {
                         for (int y = 0; y < structure.height; y++) {
                             UpdateTileTexture(x, y);
@@ -71,7 +89,7 @@ namespace CyberCity {
                         batch.Draw(tile.texture, new Vector2((float)x * Tile.width, (float)y * Tile.height), null, tile.color, 0f, Vector2.Zero, Vector2.One, SpriteEffects.None, 0 + 0.2f);
                 }
             }
-            game.DrawRectangle(batch, new Rectangle(0, 0, 1, 1), 2, Color.Red, 1f);
+            game.DrawRectangle(batch, new Rectangle(0, 0, structure.width * Tile.width, structure.height * Tile.height), 2, Color.Red, 1f);
         }
 
         public void UpdateTileTexture(int x, int y) {
@@ -148,13 +166,21 @@ namespace CyberCity {
         public void SetTile(int x, int y, Tile tile) {
             if (y < 0 || y >= structure.height || x < 0 || x >= structure.width) return;
             if (!structure.tiles[x, y].Equals(tile)) {
-                structure.tiles[x, y] = new Tile(tile.id, tile.variant);
+                structure.tiles[x, y].id = tile.id;
+                structure.tiles[x, y].variant = tile.variant;
                 UpdateTileTexture(x, y);
                 foreach (Point offset in World.offsets) {
                     if (y + offset.Y < 0 || y + offset.Y >= structure.height) continue;
                     if (x + offset.X >= 0 && x + offset.X < structure.width) UpdateTileTexture(x + offset.X, y + offset.Y);
                 }
                 if (y + 2 < structure.height) UpdateTileTexture(x, y + 2);
+            }
+        }
+
+        public void SetBackground(int x, int y, string background) {
+            if (y < 0 || y >= structure.height || x < 0 || x >= structure.width) return;
+            if (structure.tiles[x, y].background != background) {
+                structure.tiles[x, y].background = background;
             }
         }
     }

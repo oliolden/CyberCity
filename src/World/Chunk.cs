@@ -7,13 +7,20 @@ namespace CyberCity {
         internal Game1 game;
         internal World world;
         public Tile[,] tiles;
-        public List<GameObject> objects;
-        public string biome;
+        public Tile[][] Tiles { get { return tiles.ToJaggedArray(); } set { tiles = value.To2DArray(); } }
+        public string biome { get; set; }
 
         public Chunk(World world) {
             this.world = world;
             game = world.game;
             tiles = new Tile[World.chunkTileSize.X, World.chunkTileSize.Y];
+        }
+
+        public Chunk() { }
+
+        public void SetWorld(World world) {
+            this.world = world;
+            game = world.game;
         }
 
         private void SetTile(int x, int y, Tile tile) {
@@ -30,6 +37,15 @@ namespace CyberCity {
             tiles[x, y].variant = variant;
         }
 
+        public void PlaceStructure(Structure structure, int X, int Y) {
+            if (structure == null) return;
+            for (int x = 0; x < structure.width; x++) {
+                for (int y = 0; y < structure.height; y++) {
+                    SetTile(X + x, Y + y, structure.tiles[x, y]);
+                }
+            }
+        }
+
         public void Generate(int seed) {
             Random random = new Random(seed);
             biome = Biome.all.ElementAt(random.Next(Biome.all.Count())).Key;
@@ -40,9 +56,10 @@ namespace CyberCity {
                     else SetTile(x, y, Biome.all[biome].tiles[key].Copy());
                 }
             }
-
+            if (biome == "industrialZone") {
+                Structure structure = Structure.Load("testbuild");
+                PlaceStructure(structure, World.chunkTileSize.X / 2 - structure.width / 2, 22 - structure.height);
+            }
         }
-
-
     }
 }

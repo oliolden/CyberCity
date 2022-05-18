@@ -9,7 +9,7 @@ namespace CyberCity {
         public int width { get; set; }
         public int height { get; set; }
         public Tile[,] tiles;
-        public Tile[][] saveTiles { get { return tiles.ToJaggedArray(); } set { tiles = value.To2DArray(); } }
+        public Tile[][] Tiles { get { return tiles.ToJaggedArray(); } set { tiles = value.To2DArray(); } }
         public List<GameObject> objects;
 
         public Structure(int width, int height) {
@@ -26,8 +26,6 @@ namespace CyberCity {
         public Structure() { }
 
         public void Save(string name) {
-            saveTiles = tiles.ToJaggedArray();
-            Debug.WriteLine(JsonSerializer.Serialize(this));
             File.WriteAllText($"..\\..\\..\\Content\\World\\Structures\\{name}.struct", JsonSerializer.Serialize(this));
         }
 

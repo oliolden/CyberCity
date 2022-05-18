@@ -11,8 +11,8 @@ namespace CyberCity {
         internal static Point chunkSize = new Point(chunkTileSize.X * Tile.width, chunkTileSize.Y * Tile.height);
         public static Point[] offsets = { new Point(-1, -1), new Point(0, -1), new Point(1, -1), new Point(-1, 0), new Point(1, 0), new Point(-1, 1), new Point(0, 1), new Point(1, 1), };
         private ParallaxBackground background;
-        int seed;
-        Random random;
+        public int seed;
+        public List<GameObject> objects;
         public static readonly string texturePath = "World\\Tiles\\";
 
         private int GetChunkId() { return (int)Math.Floor(scene.camera.center.X / chunkSize.X); }
@@ -20,7 +20,6 @@ namespace CyberCity {
 
         public World(Scene myScene, int seed = 0) : base(myScene) {
             this.seed = seed;
-            random = new Random(seed);
             chunks = new Dictionary<int, Chunk>();
             GenerateChunks(-3, 3);
             layer = 0f;
@@ -158,7 +157,7 @@ namespace CyberCity {
 
         public override void Update(GameTime gameTime) {
             int currentChunk = GetChunkId();
-            GenerateChunks(currentChunk - 2, currentChunk + 2);
+            GenerateChunks(currentChunk - 3, currentChunk + 3);
         }
 
         public void UpdateHitBox() {
