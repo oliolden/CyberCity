@@ -40,6 +40,7 @@ namespace CyberCity {
                 { scale = new Vector2(3, 3), position = new Vector2(0, 150) }
             );
             scenes["mainMenu"].objects.Add("background", new ParallaxBackgroundObject(scenes["mainMenu"], "industrialZone", 2f));
+            scenes["mainMenu"].camera.center = scenes["mainMenu"].objects["playButton"].position;
             scenes["mainMenu"].camera.CenterOn(scenes["mainMenu"].objects["playButton"], Vector2.Zero);
 
             scenes.Add("game", new Scene(this));
@@ -106,6 +107,7 @@ namespace CyberCity {
 
         protected override void Update(GameTime gameTime) {
             // TODO: Add your update logic here
+            Input.Update();
             KeyboardState prevKeyboardState = keyboardState;
             keyboardState = Keyboard.GetState();
 

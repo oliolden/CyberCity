@@ -12,7 +12,7 @@ namespace CyberCity {
             { "jump", Keys.Space },
             { "attack", Keys.E },
         };
-        static bool left = false, right = false, sprint = false;
+        public static bool left = false, right = false, sprint = false;
         public static event EventHandler Jump;
         public static event EventHandler Attack;
 

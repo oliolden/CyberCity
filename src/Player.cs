@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using System.Timers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -12,12 +14,14 @@ namespace CyberCity {
         private bool isRunning;
         private bool isAttacking;
         private bool hasDoubleJumped;
-        private bool isSprinting;
-        private bool runAttack;
         private bool noClip;
 
         private KeyboardState keyboardState;
         private MouseState mouseState;
+
+        private int attack;
+        private Task attackTask;
+        private bool combo;
 
         public Player(Scene scene) : base(scene) {
             animations = new Dictionary<string, Animation> {
@@ -26,8 +30,9 @@ namespace CyberCity {
                 { "jump", new Animation(Game1.textures["Cyborg\\Cyborg_jump"], 4, false) },
                 { "doublejump", new Animation(Game1.textures["Cyborg\\Cyborg_doublejump"], 5, false, 0.1f) },
                 { "run_attack", new Animation(Game1.textures["Cyborg\\Cyborg_run_attack"], 6, false) },
-                { "punch", new Animation(Game1.textures["Cyborg\\Cyborg_attack1"], 6, false, 0.1f) },
-                { "hurt", new Animation(Game1.textures["Cyborg\\Cyborg_hurt"], 2, false, 0.2f) },
+                { "attack1", new Animation(Game1.textures["Cyborg\\Cyborg_attack1"], 6, false, 0.08f) },
+                { "attack2", new Animation(Game1.textures["Cyborg\\Cyborg_attack2"], 8, false, 0.08f) },
+                { "attack3", new Animation(Game1.textures["Cyborg\\Cyborg_attack3"], 8, false, 0.12f) },
             };
             animationManager = new AnimationManager(animations["idle"]);
 
@@ -40,8 +45,8 @@ namespace CyberCity {
             hitBoxSize = new Point(16, 32); // 24, 36
             isRunning = false;
             isAttacking = false;
-            runAttack = false;
             noClip = false;
+            Input.Attack += OnAttack;
             layer = 3f;
         }
 
@@ -80,20 +85,21 @@ namespace CyberCity {
                 color = Color.White;
             }
 
+            if (isAttacking) { Input.right = false; Input.left = false; }
+
             if (CollidesAny()) { isStuck = true; }
             else {
                 isStuck = false;
                 // Movement
                 isRunning = false;
                 if (isGrounded) hasDoubleJumped = false;
-                if (keyboardState.IsKeyDown(Keys.LeftShift)) isSprinting = true; else isSprinting = false;
                 isWalking = false;
-                if (keyboardState.IsKeyDown(Keys.D) || keyboardState.IsKeyDown(Keys.A)) {
-                    if (keyboardState.IsKeyDown(Keys.D)) {
-                        Walk(gameTime, false, topSpeed + (isSprinting ? sprintBoost : 0));
+                if (Input.left || Input.right) {
+                    if (Input.right) {
+                        Walk(gameTime, false, topSpeed + (Input.sprint ? sprintBoost : 0));
                     }
-                    if (keyboardState.IsKeyDown(Keys.A)) {
-                        Walk(gameTime, true, topSpeed + (isSprinting ? sprintBoost : 0));
+                    if (Input.left) {
+                        Walk(gameTime, true, topSpeed + (Input.sprint ? sprintBoost : 0));
                     }
                     if (!isBlocked) {
                         isRunning = true;
@@ -114,28 +120,51 @@ namespace CyberCity {
 
             }
 
-            // Attacking
-            if (!isAttacking && isGrounded && mouseState.LeftButton == ButtonState.Pressed) {
-                isAttacking = true;
-                runAttack = isRunning;
-            }
-            else if (isAttacking && animationManager.isPlaying == true) { }
-            else { isAttacking = false; }
+            //if (attackCooldown > 0) { attackCooldown -= (float)gameTime.ElapsedGameTime.TotalSeconds; }
+            //if (attackCooldown <= 0 && !nextAttack) { isAttacking = false; attack = 1; }
 
             // Animations
             if (isStuck) { PlayAnimation("idle"); color = (int)(gameTime.TotalGameTime.TotalMilliseconds / 500) % 2 == 0 ? Color.Red : Color.White; }
             else {
                 color = Color.White;
-                if (!isGrounded) { if (hasDoubleJumped) PlayAnimation("doublejump"); else PlayAnimation("jump"); }
-                else if (isAttacking) { if (runAttack) PlayAnimation("run_attack"); else PlayAnimation("punch"); }
+                if (isAttacking) { PlayAnimation("attack" + attack); }
+                else if (!isGrounded) { if (hasDoubleJumped) PlayAnimation("doublejump"); else PlayAnimation("jump"); }
                 else if (isRunning) PlayAnimation("run");
                 else { PlayAnimation("idle"); }
 
-                if (isGrounded && isRunning) animationManager.animation.frameTime = Math.Abs(10f / velocity.X);
-                else if (isGrounded && isAttacking && runAttack) animationManager.animation.frameTime = 0.2f;
+                if (isGrounded && isRunning && !isAttacking) animationManager.animation.frameTime = Math.Abs(10f / velocity.X);
             }
 
             animationManager.Update(gameTime);
+        }
+
+        private async Task Attack() {
+            combo = false;
+            isAttacking = true;
+            velocity.X += topSpeed * (spriteEffects == SpriteEffects.FlipHorizontally ? -1 : 1);
+            await Task.Delay((int)(animations["attack" + attack].frameTime * animations["attack" + attack].frameCount * 1000));
+            isAttacking = false;
+        }
+
+        public async void OnAttack(object sender, EventArgs args) {
+            if (attackTask == null || attackTask.IsCompleted) { attack = 1; attackTask = Task.Run(Attack); return; }
+            else if (!combo) {
+                combo = true;
+                await attackTask;
+                if (attack < 3) attack++;
+                attackTask = Task.Run(Attack);
+            }
+            /*
+            if (attackCooldown <= 0) {
+                attackCooldown = 0.96f;
+                isAttacking = true;
+                if (nextAttack && attack < 3) { attack++; }
+
+            }
+            else {
+                nextAttack = true;
+            }
+            */
         }
 
         public override void Draw(SpriteBatch batch, GameTime gameTime) {
