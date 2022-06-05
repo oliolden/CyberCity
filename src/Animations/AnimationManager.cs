@@ -13,7 +13,6 @@ namespace CyberCity {
 
         public void Play(Animation _animation = null) {
             if (_animation == null) {_animation = animation;}
-            if (!isPlaying && animation == _animation) { animation.currentFrame = 0; }
             isPlaying = true;
             if (animation == _animation) { return; }
 

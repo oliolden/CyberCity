@@ -32,7 +32,7 @@ namespace CyberCity {
                 { "run_attack", new Animation(Game1.textures["Cyborg\\Cyborg_run_attack"], 6, false) },
                 { "attack1", new Animation(Game1.textures["Cyborg\\Cyborg_attack1"], 6, false, 0.08f) },
                 { "attack2", new Animation(Game1.textures["Cyborg\\Cyborg_attack2"], 8, false, 0.08f) },
-                { "attack3", new Animation(Game1.textures["Cyborg\\Cyborg_attack3"], 8, false, 0.12f) },
+                { "attack3", new Animation(Game1.textures["Cyborg\\Cyborg_attack3"], 8, true, 0.12f) },
             };
             animationManager = new AnimationManager(animations["idle"]);
 
@@ -144,6 +144,7 @@ namespace CyberCity {
             velocity.X += topSpeed * (spriteEffects == SpriteEffects.FlipHorizontally ? -1 : 1);
             await Task.Delay((int)(animations["attack" + attack].frameTime * animations["attack" + attack].frameCount * 1000));
             isAttacking = false;
+            await Task.Delay(500);
         }
 
         public async void OnAttack(object sender, EventArgs args) {
